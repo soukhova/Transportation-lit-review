@@ -1,0 +1,512 @@
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=25, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3.5, y=50, label="Standards", size=4,fontface='bold', angle='90')
+standards_conc_percentages_plot
+90+90+90
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=25, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3.5, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=25, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3.5, y=50, label="Standards", size=4,fontface='bold', angle='90')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=25, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3.5, y=50, label="Standards", size=4,fontface='bold', angle='180')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=25, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3.5, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=25, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=2.5, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=25, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=28, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=30, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=25, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=22, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=23, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.6, y=23, label="Conceptualizations", size=4, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=4,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot
+ggsave("standards_conc_percentages_plot.png")
+#the heatmap on top and table of stand/concept definitions on the bottom.
+standards_conc_percentages_plot_and_table <- cowplot::plot_grid(
+gen_grob(totals_standards_table_flex, scaling="fixed"),
+standards_conc_percentages_plot,
+NULL,
+gen_grob(totals_conc_table_flex, scaling = "fixed", fit="width"),
+nrow = 2, ncol=2, rel_heights = c(1.5,1), rel_widths = c(1,5) )
+standards_conc_percentages_plot_and_table
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.6, y=23, label="Conceptualizations", size=3, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=3,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+annotate(geom="text", x=5.5, y=23, label="Conceptualizations", size=3, fontface='bold') +
+annotate(geom="text", x=3, y=50, label="Standards", size=3,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.5, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+annotate(geom="text", x=3, y=50, label="Standards", size=3,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.4, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+annotate(geom="text", x=3, y=50, label="Standards", size=3,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.3, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+annotate(geom="text", x=3, y=50, label="Standards", size=3,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.3, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+geom_label(aes(x=3, y=50, label="Standards"), size=3,fontface='bold', angle='270', , fill="grey")
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.3, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+geom_text(aes(x=3, y=50, label="Standards"), size=3,fontface='bold', angle='270', , fill="grey")
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.3, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+geom_text(aes(x=3, y=50, label="Standards"), size=3,fontface='bold', angle='270',)
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.3, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+geom_text(aes(x=3, y=50, label="Standards"), size=3,fontface='bold', angle='270')
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.3, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+geom_richtext(aes(x=3, y=50, label="Standards"), size=3,fontface='bold', angle='270', fill="grey")
+standards_conc_percentages_plot
+standards_conc_percentages_plot <- ggplot(totals_standards_conc,
+aes(x=std_mcat, y=conc, fill= total_perc_in_all
+#width = rep(10, each=50)
+))+
+geom_tile() +
+scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.2, limits = c(0,.4), na.value = "#FCB5AC") +
+scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][1:5]) +
+scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+geom_text(aes(label = total_perc_in_all %>% percent(accuracy = 0.1)), color = "white", size = 3) +
+geom_vline(xintercept=4.5, size=1.5, color = "#191970") +
+geom_hline(yintercept = 43.5, size=1.5, color="#191970")+
+theme_classic() +
+coord_flip()+
+theme(legend.position = "none",
+axis.ticks = element_blank(),
+axis.text.x=element_text(angle=20,hjust=1),
+axis.text = element_text(size=7),
+axis.title = element_blank())+
+geom_label(aes(x=5.3, y=23, label="Conceptualizations"), size=3, fontface='bold', fill="grey") +
+ggtext::geom_richtext(aes(x=3, y=50, label="Standards"), size=3,fontface='bold', angle='270', fill="grey")
+standards_conc_percentages_plot
+install.packages("ggtext")
+install.packages("ggtext")

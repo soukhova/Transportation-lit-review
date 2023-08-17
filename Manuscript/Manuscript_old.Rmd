@@ -1,0 +1,737 @@
+---
+title: Equity conceptualization and standards within transportation literature: a scoping review
+author:
+  - name: Alice Anonymous
+    email: alice@example.com
+    affiliation: Some Institute of Technology
+    footnote: 1
+  - name: Bob Security
+    email: bob@example.com
+    affiliation: Another University
+  - name: Cat Memes
+    email: cat@example.com
+    affiliation: Another University
+    footnote: 2
+  - name: Derek Zoolander
+    email: derek@example.com
+    affiliation: Some Institute of Technology
+    footnote: 2
+address:
+  - code: Some Institute of Technology
+    address: Department, Street, City, State, Zip
+  - code: Another University
+    address: Department, Street, City, State, Zip
+footnote:
+  - code: 1
+    text: "Corresponding Author"
+  - code: 2
+    text: "Equal contribution"
+abstract: |
+  This is the abstract.
+
+  It consists of two paragraphs.
+
+journal: "An awesome journal"
+date: "`r Sys.Date()`"
+bibliography: All_papers_in_extracted.bib
+#linenumbers: true
+numbersections: true
+csl: elsevier-harvard.csl
+output: rticles::elsevier_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+```
+
+```{r library-setup, echo=FALSE}
+library(huxtable)
+library(sf)
+library(ggplot2)
+# library(tmap)
+library(tidyverse)
+library(readxl)
+library(DiagrammeR)
+```
+
+# Introduction
+
+<!-- defining transportation equity, and why it is important-->
+
+An equitable transportation system, from a transportation planning perspective, can be broadly defined as the fair production, distribution, and reproduction of transportation benefits, and burdens within a community [@pereiraDistributiveJusticeEquity2017a]. It should focus on the socio-economic groups over which these benefits and burdens are distributed and some distributive benchmark that determines what is or is not equitable (or "morally proper") across a variety of dimensions such as mobility/accessibility, air pollution, traffic safety, and health [@lucasMeasuringTransportEquity2019]. Though equity often concerns itself with distributions of transportation burden/benefits, it *can* be mapped onto core concepts of justice. The calls for justice within our im/mobility systems are intensifying within practice and proliferating within academic research spaces. (XXX). There is a neeed. But how do we go about planning equitable and just transportation systems?
+
+<!-- Begining to distinguish between justice and equity, and the aim of the review -->
+
+The distinction between equity and justice is important and significant. Within the realm of transportation, concepts of distributive ("fair share") justice are often theorized, along with procedural ("fair processes") justice and restorative ("putting things back together as they were") justice. Justice questions can be centered through expressions of "what" (is the thing of in/justice), "who" (is or is not impacted), "where", "when", and "why" (root causes). Justice is much more than just equity, but both are topics of concern for transportation researchers, planners, and organizers (X). <!-- pereira and karner 2021-->
+
+<!-- Reviewing justice concepts within an example-->
+
+Take the reality of long transit wait times for core transit riders. Identifying and addressing this perceived inequity is the focus of activists (X), planning guidelines (X), and academic researchers (X). This issue can be theorized from a **distributive justice** perspective by looking to expand service for these neighbours such that wait times are similar to other neighbourhoods [@pereiraDistributiveJusticeEquity2017a]. The equity in distribution (and what is evaluated) can be theorized through the distributional justice lens. **Procedural justice** could look like adjusting transit planning guidelines such that core transit users perceive the distribution of wait times are sufficient (building on distributive justice). **Restorative justice** could look the compensation of core transit riders for lost time due to long transit wait times in the past in addition to measures of distributive and procedural justice. Justice is ultimately what is fair for those who experience injustice. Realms of justice are often cross-cutting depending on who/what/where/when/how the injustice is approached.
+
+Cross-cutting justice theories related to transportation are numerous. **Environmental justice** is a large body of research that concerns environmental pollution that can be connected to transportation systems: for instance, the 1960s highway expansion project through lower-income and communities of colour. **Mobility justice** cross-cuts many realms of justice and seeks to understand how broader power inequities like racism, sexism and classism, inform the governance and control of movement and reproduced by mobility systems [@shellerMobilityJusticePolitics2018].
+
+<!-- The aim of the paper -->
+
+Interest in equitable and just transportation planning has proliferated in the past decades (XX) and the calls for mobility justice within communities continues (XX). Within transportation planning academic literature, equity has been conceptualized and operationalization through measures in a variety of ways. but it is unclear in what ways, if at all, there has been consensus on what a just transportation system looks like and is operated by.
+
+As mentioned, though justice touches on aspects of equity, equity is not justice [@karnerTransportationEquityTransportation2020]: Justice is at the core of understanding socio-spatial phenomenon [@przybylinskiWhereJusticeGeography2022]. Understanding the distinction is important and how equity can be used within justice is crucial to building and sustaining fair transportation systems. This paper responds to these calls by conducting a scoping review of recent peer-reviewed literature and planning documents to see what theories have been implemented and if any standards/thresholds have been applied globally. This is the widest and most in-depth literature review on just transportation planning done to date.
+
+To inform this review, principles of justice as they correspond to production of injustice and the distribution of benefits and costs of transportation planning are first reviewed, then academic literature <!-- then planning documents??-->, and lastly a discussion of findings. We aim to outline definitive terminology and how it has been applied in literature, building off XXX.
+
+# Methods
+
+## Search query creation, equity dimensions and screening
+
+We screened for papers that related to transportation systems and had some sort of equity dimension. The categories:
+
+| Equity dimensions                               | Definitions                                                                                                                                                                                         |
+|-------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| (Im)Mobility                                    | Focus on people and their ability to freely move between activities (e.g., physical barriers).                                                                                                      |
+| Accessibility                                   | Focus on people/infrastructure and the potential for interaction with activities.                                                                                                                   |
+| Activity participation                          | The ability to freely participate in activities.                                                                                                                                                    |
+| Quality of service                              | Related to user satisfaction with transportation service and/or objective measures (i.e., service frequency, road quality, congestion, crowding).                                                   |
+| Affordability                                   | Associated with socio-economic conditions of users and/or user-fees (e.g., housing affordability related to transportation, transport affordability, transport user fees)                           |
+| Pollution- air, noise, visual                   | Pollution as a result of transportation systems or modes.                                                                                                                                           |
+| Energy                                          | Related to transportation energy consumption and/or related concepts (e.g., fuel poverty).                                                                                                          |
+| Safety- Road safety/vision zero/sense of safety | Risk of physical injury related to transportation (e.g., car crashes, bike injuries, over-policing related risk, sense of safety using transportation systems such as harassment or over-policing.) |
+| Health                                          | Health aspects related to transportation systems (e.g., mode choice, health-related pollution, stress level ).                                                                                      |
+| Community severance                             | A focus on the transport system+communities and how it limits people's mobility.                                                                                                                    |
+| System resilience                               | Related to how transportation systems mitigate the severity and likelihood of failures/disruptions, to adapt to changing conditions, and to respond appropriately after the fact.                   |
+
+The results of the screening:
+
+```{r}
+grViz("digraph flowchart {
+      node [fontname = Helvetica, shape = rectangle, style = filled, color = grey90]
+      
+      tab1 [label = '6832 references imported for screening as 6832 studies']
+      tab1_1 [label = '611 duplicates removed']
+      tab2 [label = '6221 studies screened against title and abstract']
+      tab2_1 [label = '4511 studies excluded']
+      tab3 [label = '1710 studies assessed for full-text eligibility']
+      tab3_1 [label = 
+      <1544 studies excluded:<br ALIGN = 'LEFT'/> 
+      &#8226; 1060 No ES (only EC)<br ALIGN = 'LEFT'/> 
+      &#8226; 285 No full-text<br ALIGN = 'LEFT'/> 
+      &#8226; 147 No EC and no ES<br ALIGN = 'LEFT'/> 
+      &#8226; 38 No EC (only ES)<br ALIGN = 'LEFT'/> 
+      &#8226; 13 Other<br ALIGN = 'LEFT'/> 
+      &#8226; 1 Wrong study type<br ALIGN = 'LEFT'/> >]
+      tab4 [label = '166 studies included']
+
+      blank1[label = '', width = 0.01, height = 0.01]
+      tab1 -> blank1[dir=none];
+      blank1 -> tab1_1[minlen=10];
+      {{ rank = same; blank1 tab1_1 }}
+      blank1 -> tab2
+      
+      blank2[label = '', width = 0.01, height = 0.01]
+      tab2 -> blank2[dir=none];
+      blank2 -> tab2_1[minlen=10];
+      {{ rank = same; blank2 tab2_1 }}
+      blank2 -> tab3
+
+      blank3[label = '', width = 0.01, height = 0.01]
+      tab3 -> blank3[dir=none];
+      blank3 -> tab3_1[minlen=10];
+      {{ rank = same; blank3 tab3_1 }}
+      blank3 -> tab4
+      }
+      ")
+```
+
+## Equity conceptualizations and standards
+
+The 166 studies that are included in this review are papers that have both equity conceptualizations and standards. The following table contains the definitions:
+
+NOTE: Some additional definitions emerged through the data extraction process, and additional definitions were coded post-data extraction upon agreement with all authors.
+
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Equity conceptualizations                                           | Definitions                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
++=====================================================================+==========================================================================================================================================================================================================================================================================================================================================================================================================================================================================+
+| Utilitarian                                                         | Concerned with the aggregate distribution of transportation benefits/burdens (not individual). Net benefit is maximized and/or net burden is minimized [@pereiraDistributiveJusticeEquity2017a].                                                                                                                                                                                                                                                                         |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Libertarianism                                                      | Distribution of transportation benefits/burdens as a result of free-market transactions [@pereiraDistributiveJusticeEquity2017a].                                                                                                                                                                                                                                                                                                                                        |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Rawl's Egalitarianism -- Different Principle                        | Interventions (i.e., infrastructure investments, subsidies, service provision) can only be considered fair if they improve the accessibility levels of the least advantaged groups [@pereiraDistributiveJusticeEquity2017a].                                                                                                                                                                                                                                             |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Sufficientarism / Capabilities approach                             | Minimum and/or thresholds for interventions and/or outcomes related to key activities (accessibility/mobility, etc.) and quality of life/capability [@pereiraDistributiveJusticeEquity2017a].                                                                                                                                                                                                                                                                            |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Horizontal equity                                                   | Equal interventions for all groups; this means treating individuals equally in equal circumstances and opposing unjustifiable preferences of one individual or group over another. e.g., a planner would distribute transit burdens and benefits evenly throughout the community [@camporealeModelingHorizontalVertical2019; @vanweeDiscussingEquitySocial2011].                                                                                                         |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Vertical equity                                                     | Equal outcomes for all groups; this means groups with greater ability should contribute more to groups with less ability (i.e., considers existing social inequities and/or different mobility or accessibly). E.g., a planner would prioritize transit benefits and the reduction of burdens for socio-economic disadvantages groups and/or mobility/accessibility disadvantaged groups [@camporealeModelingHorizontalVertical2019; @vanweeDiscussingEquitySocial2011]. |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Rights                                                              | Concerned with fundamental rights- i.e., right to the city/right to mobility/universal design principles.                                                                                                                                                                                                                                                                                                                                                                |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transport disadvantage                                              | Interrelation between inadequate transport, dispersed services and/or lack residential location choices. The focus could be disadvantaged groups who experience these problems, or transport/urban form characteristics.                                                                                                                                                                                                                                                 |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transport poverty                                                   | An individual is transport poor if at least one of the following conditions apply:                                                                                                                                                                                                                                                                                                                                                                                       |
+|                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|                                                                     | -   There is no transport option available that is suited to the individual's physical condition and capabilities (Mobility poverty)                                                                                                                                                                                                                                                                                                                                     |
+|                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|                                                                     | -   The existing transport options do not reach destinations where the individual can fulfil his/her daily activity needs, in order to maintain a reasonable quality of life. (Accessibility poverty)                                                                                                                                                                                                                                                                    |
+|                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|                                                                     | -   The necessary weekly amount spent on transport leaves the household with a residual income below the official poverty line (Affordability)                                                                                                                                                                                                                                                                                                                           |
+|                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|                                                                     | -   The individual needs to spend an excessive amount of time travelling, leading to time poverty or social isolation (Time poverty)                                                                                                                                                                                                                                                                                                                                     |
+|                                                                     |                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|                                                                     | -   The prevailing travel conditions are dangerous, unsafe or unhealthy for the individual (Exposure to externalities)                                                                                                                                                                                                                                                                                                                                                   |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Time poverty                                                        | [@lucasMethodEvaluateEquitable2016] transport-related definition: "The individual needs to spend an excessive amount of time travelling, leading to time poverty or social isolation". Could relate to income-status but does not necessarily have to.                                                                                                                                                                                                                   |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Transport-related social exclusion                                  | [@kenyonTransportSocialExclusion2002] have defined transport related social exclusion as "the process by which people are prevented from participating in the economic, political and social life of the community because of reduced accessibility to opportunities, services and social networks, due in whole or in part to insufficient mobility in a society and environment built around the assumption of high mobility"                                          |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Wellbeing/satisfaction                                              | Focus on subjective wellbeing or user satisfaction                                                                                                                                                                                                                                                                                                                                                                                                                       |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Spatial or modal equity/equality                                    | Focused on spatial differences in intervenions, outcomes, and/or socio-demographic composition of transportation users.                                                                                                                                                                                                                                                                                                                                                  |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Community engagement and recognition --bottom-up transport planning | Focus on public participation and procedural justice as it concerns transportation planning.                                                                                                                                                                                                                                                                                                                                                                             |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Restorative justice                                                 | Focus on repairing harm for those harmed in any transportation dimension.                                                                                                                                                                                                                                                                                                                                                                                                |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| (\*) add additional 'tags'?                                         |                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
++---------------------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+The above tables - all the equity conceptualizations categories. Most were created before data extraction. Starred categories were created after data extraction through synthesis.
+
+The following is the standards categories. These were created after data synthesis, as the standards took form in a variety of ways. See the origin equity standards within the protocol (LINK):
+
+| Equity standards                    | Definitions\* all can be relative, minimum, or maximum standards.                                                                                                                                                  |
+|-------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Opportunity accessibility threshold | The number of opportunities/activities that should be reached to achieve an 'equitable' transport-related configuration.                                                                                           |
+| Travel time                         | The travel time to/from opportunities/activities that should be reached to achieve an 'equitable' transport-related configuration.                                                                                 |
+| Travel distance                     | The travel distance to/from opportunities/activities that should be reached to achieve an 'equitable' transport-related configuration.                                                                             |
+| Urban environmental threshold       | A composite or series of indices related to the urban environment (e.g., quality of transport infrastructure) that can be used to determine if an area has reached an 'equitable' transport-related configuration. |
+| Health threshold                    | A transport-related value associated with a equitable health outcomes (e.g., level of noise pollution, air pollution, collision frequency).                                                                        |
+| Perceived equity                    | Interpreted as a 'sufficient' level of transport-related equity, often retrieved through qualitative methods.                                                                                                      |
+|                                     |                                                                                                                                                                                                                    |
+|                                     |                                                                                                                                                                                                                    |
+|                                     |                                                                                                                                                                                                                    |
+|                                     |                                                                                                                                                                                                                    |
+
+How exactly do equity conceptualization, dimensions and standard intersect? Let's take an example. [@adlakhaMindGapGender2020] focuses on *horizontal equity* that is the conceptualization. The population of interest are Indian women and the measure of equity is physical activity levels achieved (i.e., relative equity across gendered groups is achieved horizontal equity). The equity *dimensions* are activity participation and health as related to transport systems. This study is concerned about the gendered differences in walkability and conceptualizes equity as a minimum physical activity level being met by all genders as an equity configuration. In this way, the conceptualization (horizontal equity) is concerned about the dimensions of activity participation, and the standard is a minimum activity limit being met.
+
+## Additional information: population groups, mode, and case study geography
+
+Population group:
+
+-   Age
+-   Gendered
+-   Income groups
+-   Unemployment status
+-   Newcomer status
+-   (Dis)abilities
+-   Race/ethnicity
+-   Vulnerable groups (composite)
+
+Mode:
+
+-   Transit
+-   Commuter rail
+-   Pedestrian
+-   car
+-   Micro-mobility options
+
+Details about the journal, urban/rural geography of the case study, and the location of the case study.
+
+# Summary findings
+
+## Years, journals and case study region and mode
+
+```{r}
+Consensus_all <- read_excel("ALL_Extraction_Results_Feb22_edited.xlsx") %>% filter(`Reviewer Name` == "Consensus")
+
+Consensus_only_analysis <- read_excel("ALL_Extraction_Results_Feb22_edited.xlsx") %>% 
+  filter(`Reviewer Name` == "Consensus") %>% 
+  filter(`Included in analysis` == "Yes")
+```
+
+Publication year and case study continent:
+
+```{r}
+ggplot(data = Consensus_only_analysis, aes(x = `Publication year`, fill = `_Case study continent`)) +
+    geom_bar() +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 10)) 
+  
+```
+
+```{r}
+#NOTE: Journal paper types. this is not very informative, more of a FYI for us.
+# Consensus_only_analysis %>% 
+#   group_by(`Record publication name`) %>% 
+#   count() %>% 
+#   arrange(-n) %>% 
+#   knitr::kable(format = "html", background = "yellow")
+```
+
+Modes, bar graph:
+
+```{r}
+df_mode <- strsplit(Consensus_only_analysis$`_mode`, "; ",
+                       fixed = T)
+df_mode <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_mode)),
+  mode=unlist(df_mode))
+
+df_mode <- df_mode %>% group_by(mode) %>% summarize(count = n()) %>% 
+  mutate(desc = c("", 
+                  "Includes: ridehailing,\npassenger car-trips, taxi",
+                  "Includes: other micromobility,\nwater-transport, etc.", 
+                  "",
+                  "Includes: all public transit, \ncommuter rail, para-transit",
+                  "The mode is not the focus"
+                  ))
+
+mode_plot <- ggplot(data = df_mode, aes(x = reorder(mode, -count), y = count)) + 
+  geom_bar(stat="identity", fill = "coral2", col = "black") +
+  ggrepel::geom_label_repel(aes(label= desc),
+                  nudge_y = 3,
+                  size = 4) +
+  coord_flip() +
+  labs(y = "Count", x = "Modes") + 
+  ylim(0, 150) +
+  theme_classic() + 
+  theme(text=element_text(size=20))
+
+mode_plot
+
+ggsave("mode_plot.png")
+
+```
+
+Summary:
+
+-   single case study per paper, most popular. This topic, over time, is applied equally in Asian, European, and North American case studies - so proportionally over represented in Europe and under represented in Asia.
+
+-   Transport conferences, transport and health, applied urban planning journals are home to the majority of papers
+
+-   Mainly focuses on urban areas, with only some papers including both urban/rural.
+
+-   The majority of papers have a focus on transit mode. Next pedestrian (e.g., walkability), car, other, unspecified (e.g., network distance or some spatial distance proxy) , micro-mobility, and commuter rail.
+
+## Population and activities of interest
+
+Pop, bar graph:
+
+```{r}
+df_pop <- strsplit(Consensus_only_analysis$`_population`, "; ", 
+                       fixed = T) 
+
+df_pop <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_pop)),
+  pop=unlist(df_pop)) %>% 
+  mutate(pop = ifelse(pop == "Vulnerable populations (composite)", "Comp. vul", pop))
+
+df_pop <- df_pop %>% group_by(pop) %>% summarize(count = n()) 
+
+pop_plot <- ggplot(data = df_pop, aes(x = reorder(pop, -count), y = count)) +
+  geom_bar(stat="identity", fill = "skyblue2", col = "black") + 
+  coord_flip() +
+  labs(y = "Count", x = "Population groups") + 
+  ylim(0, 60) +
+  theme_classic() + 
+  theme(text=element_text(size=20))
+
+pop_plot
+
+ggsave("pop_plot.png")
+
+```
+
+Activities of interest, pie chart:
+
+```{r}
+df_act<- strsplit(Consensus_only_analysis$`_activity`, "; ",
+                  fixed = T) 
+
+df_act <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_act)),
+  act=unlist(df_act)) %>% 
+  mutate(act = ifelse(str_detect(act, "Other"), "Other", act))
+
+df_act <- df_act %>% group_by(act) %>% summarize(count = n())  %>% 
+  mutate(desc = c("", 
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "",
+                  "The destination is not the focus.\nIncludes: ability to embark and disembark public transit, \nthe trip itself, transport level of service, \nplaces of transportation (airport, bus stops), etc."))
+
+act_plot <- ggplot(data = df_act, aes(x = reorder(act, -count), y = count)) +
+  geom_bar(stat="identity", fill = "green4", col = "black") + 
+  coord_flip() +
+  labs(y = "Count", x = "Population groups") + 
+  ylim(0, 50) +
+  theme_classic() + 
+  theme(text=element_text(size=20))
+
+act_plot
+
+ggsave("act_plot.png")
+```
+
+Compare across population and activities studied for each population:
+
+```{r}
+df_act<- strsplit(Consensus_only_analysis$`_activity`, "; ",
+                  fixed = T) 
+
+df_act <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_act)),
+  act=unlist(df_act)) %>% 
+  mutate(act = ifelse(str_detect(act, "Other"), "Other", act))
+
+df_pop <- strsplit(Consensus_only_analysis$`_population`, "; ", 
+                       fixed = T) 
+
+df_pop <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_pop)),
+  pop=unlist(df_pop)) %>% 
+  mutate(pop = ifelse(pop == "Vulnerable populations (composite)", "Comp. vul", pop))
+
+pop_act <- merge(df_act, df_pop, by="id", all = T)
+
+pop_act_crosstab <- table(pop_act$act, pop_act$pop)
+pop_act_crosstab_t <- prop.table(pop_act_crosstab) %>% data.frame() #this was used to make the cross-tabe ppt slide.
+
+
+ggplot(data = pop_act, aes(x = `pop`, fill = `act`)) +
+  geom_bar() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+Summary:
+
+-   Not considering 'other', Income groups and age are the most common 'population characteristics' in these studies.
+
+-   Not considering 'other, Healthcare, employment, then education facilities are the most popularly studied activities.
+
+-   In these categories -\> 'other' is certainly worth unpacking further..
+
+Keep in mind we categorized the papers. It is our interpretation of what the categories are and how to summarize it.
+
+## Equity standards (and measures) and concepts (and dimensions)
+
+Type of equity standard main category (std_mcat) vs. type of equity standard (std):
+
+```{r}
+# NOTE: there's another categorization for 4 equity standards. 
+df_standard2 <- strsplit(Consensus_only_analysis$`_type of equity standard`, "; ",
+                       fixed = T)
+
+df_standard2 <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_standard2)),
+  std2=unlist(df_standard2))
+
+df_standard2 <- df_standard2 %>% group_by(std2) %>% summarize(count = n()) 
+
+std_plot <- ggplot(data = df_standard2, aes(x = reorder(std2, -count), y = count)) +
+  geom_bar(stat="identity", fill = "magenta3", col = "black") + 
+  coord_flip() +
+  labs(y = "Count", x = "Standard categories") + 
+  ylim(0, 120) +
+  theme_classic() + 
+  theme(text=element_text(size=20))
+
+std_plot
+
+ggsave("std_plot.png")
+
+```
+
+```{r}
+# NOTE: Type of equity standard measure (std_m) vs. main type of standard (std_mcat)… (this is not very informational at all… mostly because there are many 'others' for methods. This makes sense it is hard to code but I can. …) 
+# df_measure <- strsplit(Consensus_only_analysis$`How is the equity standard measured?`, "; ", 
+#                        fixed = T) 
+# 
+# df_measure <- data.frame(
+#   id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_measure)),
+#   std_m=unlist(df_measure)) %>% 
+#   mutate(std_m = ifelse(str_detect(std_m, "Other"), "Other", std_m)) #summarize "other"
+# 
+# df_standard_mcat <- strsplit(Consensus_only_analysis$`_type of equity standard2`, "; ", 
+#                        fixed = T) 
+# 
+# df_standard_mcat <- data.frame(
+#   id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_standard_mcat)),
+#   std_mcat=unlist(df_standard_mcat))
+# 
+# #join standard and standard_measure to the same df by id. 
+# standards <- merge(df_standard_mcat, df_measure, by="id", all = T)
+# 
+# 
+# ggplot(data = standards, aes(x = `std_mcat`, fill = `std_m`)) +
+#     geom_bar()+
+#   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))+ 
+#   labs(fill = "Standards", x = "Standards (main categories)")
+
+```
+
+```{r}
+# NOTE: Type of equity conceptualization (conc) vs. dimension (dim) (not super helpful, the equity standards can also be seen as conceptualizations):
+
+                            df_conc <- strsplit(Consensus_only_analysis$`_equity conceptualization`, "; ",
+                                                   fixed = T)
+
+                            df_conc <- data.frame(
+                              id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_conc)),
+                              conc=unlist(df_conc)) %>%
+                              mutate(conc = ifelse(str_detect(conc, "Other"), "Other", conc),
+                                     conc = ifelse(conc == "Community engagement and recognition â€“bottom-up transport planning", "Com. engage", conc),
+                                     conc = ifelse(conc == "Environmental justice / sustainability", "EJ", conc),
+                                     conc = ifelse(conc == "Inequitable exposure to externalities", "Exp. externalities", conc),
+                                     conc = ifelse(conc == "Rawl's Egalitarianism â€“ Different Principle", "Egalitarianism", conc),
+                                     conc = ifelse(conc == "Rights - (concerned with fundamental rights i.e., rights to the city/right to mobility/universal design principles)", "Rights", conc),
+                                     conc = ifelse(conc == "Transport disadvantage - (concerned with the interrelation between inadequate transport, dispersed services and/or lack residential location choices)", "Transport disadvantage", conc),
+                                     conc = ifelse(conc == "Transport poverty - (explicitly multi-dimensional i.e., mobility poverty and/or accessibility poverty and/or affordability and/or time poverty and/or externalities exposure)", "Transport poverty", conc ),
+                                     conc = ifelse(conc == "Wellbeing / quality of life / adequate standard of living / User satisfaction (i.e., subjective wellbeing)", "Wellbeing", conc )) #summarize "other"
+
+                            df_dim<- strsplit(Consensus_only_analysis$`Equity Dimensions`, "; ",
+                                              fixed = T)
+
+                            df_dim <- data.frame(
+                              id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_dim)),
+                              dim=unlist(df_dim)) %>%
+                              mutate(dim = ifelse(str_detect(dim, "Other"), "Other", dim),
+                                     dim = ifelse(dim == "Pollution - air, noise, visual", "Pollution", dim),
+                                     dim = ifelse(dim == "Pollution - air, noise, visual ", "Pollution", dim),
+                                     dim = ifelse(dim == "Safety - road safety/vision zero/sense of safety", "Safety", dim),
+                                     dim = ifelse(dim == "Energy - (e.g., fuel poverty, car dependence, car-related economic stress)", "Energy", dim),
+                                     dim = ifelse(dim == "System resilience - (how transport systems mitigate the severity and likelihood of failures/disruptions, adapt to changing conditions, and respond appropriately after the fact)", "System resilience", dim),
+                                     dim = ifelse(dim == "Quality of service  - (Related to user satisfaction with transportation service and/or objective measures )", "QOS", dim),
+                                     dim = ifelse(dim == "Health - (transport-related health outcomes e.g., mode choice, health-related pollution, stress level )", "Health", dim),
+
+                                     dim = ifelse(dim == "Affordability - (e.g., housing affordability, transport affordability, transport user fees)", "Affordability", dim),
+                                     dim = ifelse(dim == "Accessibility - (people/infrastructure and the potential for interaction with activities)", "Accessibility", dim),
+                                     dim = ifelse(dim == "Activity participation - (ability to freely participate in activities)", "Activity participation", dim),
+                                     dim = ifelse(dim == "(Im)Mobility - (people's ability to move freely between activites)", "(Im)Mobility", dim),
+                                     dim= ifelse(dim == "Wellbeing / quality of life / adequate standard of living / User satisfaction (i.e., subjective wellbeing)", "Wellbeing", dim))
+
+                            #join standard and standard_measure to the same df by id.
+                            concepts <- merge(df_conc, df_dim, by="id", all = T)
+
+                            ggplot(data = concepts, aes(x = `conc`, fill = `dim`)) +
+                                geom_bar() +
+                              theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
+```
+
+```{r}
+df_conc <- strsplit(Consensus_only_analysis$`_equity conceptualization`, "; ", 
+                                                   fixed = T) 
+
+df_conc <- data.frame(id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_conc)),
+                      conc=unlist(df_conc)) %>% 
+  mutate(conc = ifelse(conc == "Inequitable exposure to externalities", "Ineq. externalities", conc))
+
+df_conc <- df_conc %>% group_by(conc) %>% summarize(count = n()) 
+
+conc_plot <- ggplot(data = df_conc, aes(x = reorder(conc, -count), y = count)) +
+  geom_bar(stat="identity", fill = "orange3", col = "black") + 
+  coord_flip() +
+  labs(y = "Count", x = "Conceptualization categories") + 
+  ylim(0, 50) +
+  theme_classic() + 
+  theme(text=element_text(size=20))
+
+conc_plot
+
+ggsave("conc_plot.png")
+```
+
+```{r}
+df_conc <- strsplit(Consensus_only_analysis$`_equity conceptualization`, "; ", 
+                                                   fixed = T) 
+
+df_conc <- data.frame(id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_conc)),
+                      conc=unlist(df_conc)) %>% 
+  mutate(conc = ifelse(conc == "Inequitable exposure to externalities", "Ineq. externalities", conc))
+
+df_standard_mcat <- strsplit(Consensus_only_analysis$`_type of equity standard2`, "; ", fixed = T) 
+df_standard_mcat <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_standard_mcat)),
+  std2=unlist(df_standard_mcat)) 
+
+concepts_standards <- merge(df_conc, df_standard_mcat, by="id", all = T)
+
+#set factors so the x variables are in order of small to big.
+concepts_standards <- concepts_standards %>% mutate(conc = factor(conc))
+level_order <- c("Transport-related exclusion", "Wellbeing", "Spatial equity", "Vertical equity", "Horizontal equity", "Ineq. externalities", "Rights", 'Sufficientarism / Capabilities approach', 'Utilitarian','Restorative justice') 
+
+conc_std_plot <- ggplot(data = concepts_standards, 
+                        aes(x = `std2`, fill = factor(conc, level = level_order) ),
+                        y = count) +
+  geom_bar(col = "black") + 
+  coord_flip() +
+  labs(y = "Count", x = "Conceptualization categories", 
+       fill = "Standards") + 
+  theme_classic() +
+  theme(aspect.ratio = 1,
+        text=element_text(size=13))
+
+conc_std_plot
+
+ggsave("conc_std_plot.png")
+```
+
+Cross tabulation? Equity standards (std_mcat) vs. population groups.,  Equity concepts (conc) vs. population groups, Standards (std_mcat) vs. Equity concepts (conc):
+
+```{r}
+df_conc <- strsplit(Consensus_only_analysis$`_equity conceptualization`, "; ", 
+                                                   fixed = T) 
+
+                            df_conc <- data.frame(
+                              id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_conc)),
+                              conc=unlist(df_conc)) %>% 
+                              mutate(conc = ifelse(conc == "Inequitable exposure to externalities", "Ineq. externalities", conc))
+
+df_standard_mcat <- strsplit(Consensus_only_analysis$`_type of equity standard2`, "; ", 
+                       fixed = T) 
+df_standard_mcat <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_standard_mcat)),
+  std_mcat=unlist(df_standard_mcat))
+ 
+
+standards_pop <- merge(df_pop, df_standard_mcat, by="id", all = T)
+conc_pop <- merge(df_pop, df_conc, by="id", all = T)
+standards_conc <- merge(df_conc, df_standard_mcat, by="id", all = T)
+
+ggplot(data = standards_pop, aes(x = `pop`, fill = `std_mcat`)) +
+                                geom_bar() +
+                              theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+                              labs(x = "Population group", fill = "Standards (main categories)")
+
+ggplot(data = conc_pop, aes(x = `pop`, fill = `conc`)) +
+                                geom_bar() +
+                              theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+                              labs(x = "Population group", fill = "Conceptualizations (summarized)")
+
+ggplot(data = standards_conc, aes(x = `conc`, fill = `std_mcat`)) +
+                                geom_bar() +
+                              theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+                              labs(x = "Conceptualizations (summarized)", fill = "Standards (main categories)") 
+```
+
+
+
+Summary:
+
+-   Equity standards: the majority need to be unearth, they are 'other'. Those need to be further examine. As the bar chart makes clear - there's a lot of interesting 'other' types of measures used for 'other' standards.
+
+-   Of the equity standards that are not 'other'. Max. travel time/distance are most popular, then perceived equity (qualitative methods typically), then some opportunity availability threshold, then cost/benefit. The type of measures they use are not surprising: max. travel time/distance mostly use accessibility indices - but travel distance is supplemented with surveys more often than studies using travel time.
+
+-   All equity standard (not other) seem to use accessibility index the most - with exception to perceived equity. Unsurprisingly - they use surveys / focus groups / interviews.
+
+-   Conceptualizations vs. dimensions; a lot to unpack there and certainly worth going over again to better synthesis.
+
+# How equity dimensions, conceptualizations and standards are operationalized
+
+## Broad measures of livability
+
+Broad measures of livability and urban quality appear as goals for equity. They measures encompass *urban environment* equity thresholds which typically set minimum thresholds. [@agost-felipInclusiveModelAssessing2021], [@aldertonWhatMeaningUrban2019], [@adlakhaMindGapGender2020].....: These papers suggest equity thresholds informed by planning guidelines, interviews with local policy makers, or a combination of both. Measures of urban livability:
+
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Minimum equity standard                       |                                                                                                                                                                        |
++===============================================+========================================================================================================================================================================+
+| Outdoor water quality                         | e.g., dissolved oxygen content of greater than 2.0 mL/L for canal water [\@agost-felipInclusiveModelAssessing2021].                                                    |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Green areas:                                  | -   10 m\^2 per capita [\@aldertonWhatMeaningUrban2019].                                                                                                               |
+|                                               | -   Maximize the percentage of residents living less than 400 m of public open space, large park and/or local park [\@agost-felipInclusiveModelAssessing2021]          |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Daytime/nighttime noise pollution:            | 55 dBA / 45 dBA [\@aldertonWhatMeaningUrban2019].                                                                                                                      |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Accessible paving:                            | At least 50% of all sidewalks should have a width greater than 1.5 m [\@aldertonWhatMeaningUrban2019].                                                                 |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Ramps:                                        | 50% of all ramps should have a slope of less than 8% [\@aldertonWhatMeaningUrban2019].                                                                                 |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Pedestrian routes:                            | paved routes are greater than 50% [\@aldertonWhatMeaningUrban2019].                                                                                                    |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Accessible public transit:                    | -   at least 50% PT stops should be accessible [\@aldertonWhatMeaningUrban2019]                                                                                        |
+|                                               |                                                                                                                                                                        |
+|                                               | -   maximize the percentage of residents living less than 400 m of a local bus stop and less than 800m from a train station [\@agost-felipInclusiveModelAssessing2021] |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Lighting:                                     | 50% of lights are min. 35 lux (road traffic) and 20 lux (ped streets) [\@aldertonWhatMeaningUrban2019]                                                                 |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Adaptive traffic lights:                      | min. 50% of traffic lights [\@aldertonWhatMeaningUrban2019].                                                                                                           |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Health facilities:                            | Geometric center of neighborhood should be within 600m of HF; no more than 1000m [\@aldertonWhatMeaningUrban2019].                                                     |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Elderly care facilities:                      | Geometric center of neighborhood should be within 300m of ECF; no more than 600m [\@aldertonWhatMeaningUrban2019].                                                     |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Places for essential shopping                 | Geometric center of neighborhood should be within 300m of ECF; no more than 600m [\@aldertonWhatMeaningUrban2019].                                                     |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Community centers:                            | maximize % of residents living less than 400 m [\@agost-felipInclusiveModelAssessing2021]                                                                              |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Physical activity:                            | 150 min / 75 min of moderate / vigorous intensity physical activity per week [@adlakhaMindGapGender2020]                                                               |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Age buildings:                                | 75% or more should be newer than 50 years old; no less than 50% [\@aldertonWhatMeaningUrban2019].                                                                      |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Accessibility in res. and non-res. buildings: | 25% or more should be accessibility (to enter), if less than 25% this is unequitable [\@aldertonWhatMeaningUrban2019].                                                 |
++-----------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+They also frequently approach these standards from broad equity conceptualizations and dimensions. [@agost-felipInclusiveModelAssessing2021] and [@aldertonWhatMeaningUrban2019] both conceptualization how urban environmental quality improves livability, and can have an impact on transport-related social exclusion along with wellbeing generally.
+
+## Measures of population health - externalities
+
+-   health burdens associated with low physical activity and low quality ped infrastructure, air pollution from high traffic roads. These papers generate health-informed standards that can be used for equity planning. Table:
+
+\-\--
+
+## Use of accessibility measures
+
+Outputs or intermediate values used in accessibility measures such as opportunity accessibility thresholds, population thresholds, or travel cost thresholds are also the source of equity standards in some of the papers.
+
+-   Many standards used for what an 'acceptable' travel distance to an opportunity. Standard justification varies -- from travel surveys, from planning standards, from literature, etc. They vary depending on destination, population, method, etc.
+-   The studied activities, or destinations of interest also vary.
+-   Many methods -- cumulative opportunities, Hansen-type, floating approaches, modified versions of those.
+-   Use of travel standards to define travel threshold
+
+## Prioritizing areas based on relative measures of equity
+
+Many papers us relative comparisons to determine areas of inequity to determine priority. This can look like socio-demographic characteristics to determine what is an 'old age' and 'economically vulnerable' and ' non-civically engaged' population. (i.e., if average neighbourhood rates are 1.1 greater (or more) than population average).Various socio-demographic characteristics to determine what is an 'old age' and 'economically vulnerable' and ' non-civically engaged' population. (i.e., if average neighbourhood rates are 1.1 greater (or more) than population average) as done in [@agost-felipInclusiveModelAssessing2021].
+
+[@abasoloEquityUtilizationAccess2001a] [@adliRightCityApplying2018] ... use relative measures as the goal. For instance, [@abasoloEquityUtilizationAccess2001a] defines horizontal and vertical equity (across socio-economic characteristics) in access and utilization of primary physicians as the goal. [@adliRightCityApplying2018] quantify the added accessibility to employment benefits from public transit investment, and a positive correlation coefficient associated with accessibility and prevailing socioeconomic outcomes as the equity goal.
+
+## The definition of maximum or minimum standards
+
+-   Energy requirement minimums
+-   Air, noise, green space guidelines
+-   Personal perspectives -- people who what's enough
+-   Relatively equal, or relatively good -- what happens when void of a min or max?
+
+## Disparity analysis and the intentional analysis of equity
+
+The paper's motivation informs how they conceptualize equity, the dimensions of analysis, and how they choose to determine if a configuration is equitable or not. The **methods** used to define the equity standard widely varies.
+
+Many papers that conceptualize equity as **horizontal** and/or **vertical** **equity** apply common equity measures such as Gini coefficient (horizontal), and Theil (vertical) and make it clear the achieving *equity* in these measures is the goal... Table?
+
+Papers also implement **qualitative methods**, from surveys and questionnaires to interviews and focus-groups. The use of qualitative methods within this set of papers is often to establish *what is enough*. A minimum standard. For instance, [@albertsRebuildingWomenLivelihoods2016] undertake field work to interview women living on the city fringe in Semmencherry Chennai, India and identify their 'accessible space' through spatial analysis and qualitative livelihoods approach. They indeed find that the provision of sufficient, safe, and affordable public transport increases access to potential opportunities, however, access is not the complete picture; the choice to travel is balanced against the background of household composition. Further, the choice not travel is not always made because traveling is impossible.
+
+# Discussion on how to move forward
+
+How do we create equity standards and conceptualize equity?
+
+## Guidelines from public health and surveys
+
+-   WHO guidelines on noise, air pollution, physical activity. These can be transportation equity goals. They are well supported and discussed
+-   Surveys: ask users what is sufficient, what is enough, what may be too much. These answers are context specific and are defined by how equity is conceptualized in the firth place.
+
+## What's there: Some standards seem arbitrary, some conceptualizations are implicit
+
+-   Not clear what destinations matter,
+-   Not clear what type of measure to use, when. The conceptualization matters of course... but also the type of measure! Equity findings can be vastly different. Findings could be manipulated
+
+## What's missing:
+
+-   Relatively equal, or relatively good -- what happens when void of a min or max?
+-   More equity intervention study. When we improve the network or land-use, how does equity change? This is lacking in the literature
+
+## Many papers did not fit the mark (were excluded)
+
+-   There is a gap between research and application. If no standard AND conceptualization -- how can planners and communities begin to apply? How to monitor our progress
+-   Are Network Planning Guidelines Based on Equal Access Equitable? This study is interesting. No clear standard, but they challenge current guidelines and that is interesting, and novel.
+-   Some interesting research has the potential to have interesting standards, but they don't provide some (for example, Price 2011)
+
+# References {#references .unnumbered}

@@ -1,5 +1,5 @@
 ---
-title: Equity conceptualization and standards within transportation literature: a scoping review
+title: 'Equity conceptualization and standards within transportation literature: a scoping review'
 author:
   - name: Alice Anonymous
     email: alice@example.com

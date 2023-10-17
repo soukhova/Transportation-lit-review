@@ -728,12 +728,12 @@ More broadly, papers that suggest **Infrastructure** standards are often multi-d
   
 See Table XX for detailed examples of papers conceptualizations and standards across each equity dimension.
 
-# Discussion and ways forward (identifying gaps and possible agenda for the future`r word_comment("This section is a work in progress, but we outlined some ideas. This will be completed after the team's first read using ideas generated.", ")")`
+# Discussion and ways forward
 
-We discuss trends in how the literature has conceptualized and used standards (the "How") to evaluate the "What" of transportation equity, the equity dimensions. These trends are context-specific: they concern the "When" and "Where" (differences across publication year, across case studies continent, and between urban and rural contexts) and the "Who" (differences in the focus on the population sub-groups, transport modes, destinations of interest) as discussed in the preceding sections following the four equity dimensions that structure this review (mobility/accessibility, traffic-related pollution, human-health related, and traffic safety).
+We discuss trends in how the literature has conceptualized and used standards (the "How") to evaluate the dimensions (the "What") of transportation equity. A noteable point is the trends are context-specific: they concern the "When" and "Where" (differences across publication year, across case studies continent, and between urban and rural contexts) and the "Who" (differences in the focus on the population sub-groups, transport modes, destinations of interest) as discussed in the preceding sections following the four equity dimensions that structure this review (mobility/accessibility, traffic-related pollution, human-health related, and traffic safety).
 
-A summary of what we found in the literature:
-
+To broadly summarize what we found in the literature:
+<!--
 - the "When" and "Where": 
   - most studies focus on case studies in north american and europe
   - south american/africa papers have key differences in focus compared to global north: they are more focused on affordability-as-a-barrier, tensions in infrastructure dev vs. service prioritization, data availability limitations
@@ -750,19 +750,48 @@ A summary of what we found in the literature:
   - health  -> health standards, the reliance on population transport health literature such as physical activity guideline recommendation per week or excess mortality burden. 
   - safety -> the use of engineering standards and best practice
   - cross-dimensional -> measures such as urban livability, etc. a more holistic conceptualization of transport equity
+-->
 
-## The need for explicit conceptualizations and grounded standards
+**The "When" and "Where"**: 
+The majority of papers (`r ((case_cont_count$count[4] + case_cont_count$count[5]+ case_cont_count$count[6])/sum(case_cont_count$count)) |> percent()`) focus on case studies in the Global North. Though their subject matter is varied, their spatial context is one situated in case studies in North American and Europe, and thus more often than not, in conversation with more developed and formal government transport planning apparatuses and technologies (e.g., planning for equitable high-speed rail [@monzonEfficiencySpatialEquity2013], autonomous vehicle technology [@eppenbergerOpportunitySharedAutonomous2021], public consultation processes [@reddySafeguardingMinorityCivil2010]).
 
-Some conceptualizations are implicit. Some standards seem arbitrary. Despite the need for and importance of setting more standards, some proposals seem arbitrary.
-For example, XXXX proposes 20 ferries per day to avoid social exclusion.
-Justifications for this number is lacking.
-It is unclear if 10 or 30 ferries would make a difference in a specific quality-of-life outcome or if that number is tied to funding/resource constraints. We need standards linked to grounded outcomes.
+However, studies from the Global South, specifically South America and Africa, have key differences in focus compared to Global North: they are more focused on affordability-as-a-barrier, public spending tensions in developing new transport infrastructure compared to transport service prioritization and more intense data availability limitations. In this way, they do not engage with emerging mobility technologies with large capital costs. Informality in transport planning is more present. In the present day, these countries, compared to the Global North, are underdeveloped for reasons of past colonialism under Northern states, heavily reliant on primary sector exports (lower efficiency, lower national GDP) under growing global financial markets, and have more fragile democracies. Because of lower data availability and more extreme needs for 'sufficient' transport, analysis of transportation inequities are more focused along economic lines. For instance, public transit network being improved such that those that at least 60% below the poverty line have at least the same amount of accessibility (60 min travel time to destinations) to jobs, educational facilities and services as the total population using public transit [@basuPracticalFrameworkBenchmarking2019]. 
 
-Relative measures are used: context, temporal, and group-specific. E.g. a certain group should have more access in certain situations. Context-matters, but this presents a challenge in policy planning. 
+Temporally, the Global North and Global South studies can be generally seen on different transport inequity continumums. Global North -> concerned with particularly disadvantaged groups and creating indicators that may be used to guide the remedy of formal processes that ensure access to societal benefits [@cuiSpatialAccessPublic2020]. Global North countries often surpass international sufficiency thresholds related to transport and public health (e.g., @carrierApplicationThreeMethods2014 measure NO2 road-side air pollution and find no levels are below the WHO guideline) but advocate for the reduction in disproportional impact of air pollution on lower-income groups. New standards are needed that are context-specific. What's also missing? We call for: _discussions of equality_. The Global North inequities are rising -- the richest have the most mobility, this is missing from the discussion. We need new standards that reflect this. 
 
-Equity is not justice. Some studies conflate the two. Justice should not be mixed up with equity. More justice work is needed, e.g., Restorative justice -- repairing harm is missing from the discussion
+In reference to transport inequity continumus, papers on the Global South tend to operationalize international standards as guidelines. Though not covered in this review, Global South nations' formal processes for planning are newer (relatively), more fragile, and operating under more strict financial constraints than the Global North. Informal processes are thus more important to account for equity (e.g, informal transit [@friedMeasuringSustainableDevelopment2020], populations living in informal residential locations [@sharmaPublicTransitAccessibility2021]). Comparisons to thresholds set by governing international bodies are relevant as minimums are relatively lower (e.g., traffic related pollution, access to basic healthcare). Global South, along some dimensions, are lagging Global North development, but have the opportunity to plan better and not repeat Global North mistakes (e.g., car-centric development [@warrenDevelopingEquitableSustainable2015]). More work on this is needed. Additionally, what's missing? Similarly, _discussions of equality_. Inequities look different than in Global North, but systems thinking is required as global forces influence the capacity of formal transport planning processes? 
 
-## Methods and data limitations
+**The "Who"**:
+Though the literature reviewed most commonly considers low-income as a socio-demographic characteristics of populations deserving equity as either by itself or alongside other characteristics (`r df_pop$count[8]+df_pop$count[4] %>% percent()` of the papers). Many employ accessibility methods (e.g., walking accessibility to open space [@tangWalkingAccessibilityNeighbourhood2021]) but a others use qualitative or mixed methods to gain perspectives of inequalities that are typically cross-dimensional (e.g., @milanLiftingPeripheralFortunes2017 asks Medellin residents living in TOD areas compared to non-TOD areas about the impact of TOD on their wellbeing based on income group and gender). The use of qualitative methods allows for a more nuanced reflection of residents perspectives, and different inequities emerge. 
+
+From a modal perspective, transit is also the primary focus of the literature; cycling and walking the next most popular focuses. These modes use public-space and users can interact with the public when using them (unlike car modes, which are seldom the focus of the reviewed literature). Upon the rise of automobility, transit was seen as a public service and something getting in the way of automobility. But historically, mass transit and active modes are how people get around - and automobility is in direct tension with the movement of other modes as it requires a lot of pubic land and public subsidy. This may be one reason why transport inequity research focuses on these modes, often car modes as driving inequalities in many dimensions (e.g., access/mobility, traffic-related pollution, traffic-safety, and human-health).
+
+In the literature reviewed, destinations of interest are mostly employment and healthcare; other destinations are less studied. For many papers, the 'destinations' however, are the trip themselves -- the experience, the quality of the infrastrucutre, the mode-service, a bundle of trips taken a month to all locations, etc. 
+  
+So what's missing from the "who"? More nuisances perspectives that capture the "who" of inequities. As shown in the variety of methods used, dimensions analysis, and conceptualizations and standards, transport inequalities are multi-dimensional. How decision makers define an equity-deserving community will impact results (e.g., [@rowangouldIdentifyingEnvironmentalJustice2015]). In this sense, standards that are defined need to be sensitive to changing community-based definitions of inequities. Are issues of economic-inequity at the root of transport inequities for a specific community? Are (dis)abilities? Are inequities in the service of transit the focus of a study because it can be improved to address transport inequities and are alternative modes driving these inequities? Access to what sorts of opportunities is driving transport inequities? How do populations, transit modes, and opportunities saught intersect to define the "who" of inequities? Community-based informed understanding of inequities are needed, and tracking how they change are needed. 
+  
+**The "What" and "How"**:
+Inequities that focus on accessibility/mobility -> opportunity standards are typically travel impedance standards, and affordability thresholds (e.g., more than 10% of monthly income should not be spent on transport [@rivasHowAffordableTransportation2018] to work and/or other necessary destinations). Oftentimes spatial equity, disparity analysis (spatial mismatch e.g., @mulleyAreNetworkPlanning2015) are operationalized. Infrastructure standards are also suggested -> often times access to destinations is conceptualized as a "right" as such being able to enter the transportation network and physically use it the pre-requisite that accessibility measures do not capture (e.g., (dis)abilities focused). 
+
+Inequities that focus on transport-related environmental externalities -> pollution/noise standards are suggested, often using WHO guidelines or local neighbourhood averages as a comparison.
+
+Inequities that focus on human-health  -> health standards, the reliance on population transport health literature such as physical activity guideline recommendation per week or excess mortality burden. 
+
+Inequities that focus on traffic-safety -> the use of engineering standards and best practice
+
+Of course, some papers focus on cross-dimensional transport inequity dimensions. Measures such as urban livability, etc. a more holistic conceptualization of transport equity. This is what we think is missing from the literature, and what's needed to move forward to justice. 
+
+## Call 1: The need for explicit conceptualizations and grounded standards
+
+Some conceptualizations are implicit within the literature: for example, @muellerSocioeconomicInequalitiesUrban2018 relative risk of mortality as related to transport-related air pollution should not be higher in deprived groups than the general population. It is not evident from the paper what conceptualization drives this focus on human-health inequities but can be implicitly inferred to be general "well being". We believe, more explicit conceptualizations support inequities are needed in the literature.
+
+Some standards are also seemingly arbitrary. For example, @caoIndicatorsSocioSpatialTransport2017 proposes 20 ferries per day to avoid social exclusion for inter-island transport planning in the Philippines in their analysis, but admits that a standard should be politically determined. It is unclear if, for instance, 10 or 30 ferries would make a difference in a specific quality-of-life outcome or if that number is tied to funding/resource constraints. If literature is to recommend standards, researchers need standards linked to grounded outcomes. For decision-makers setting standards, measuring inequities and moving towards setting flexible guidelines for standards is the next step. As such, we believe, firmer justification of standards are lacking in the literature and are needed. 
+
+Relative measures are often used: context, temporal, and group-specific. E.g. a certain group should have more access in certain situations. Context-matters, but this presents a challenge in policy planning. 
+
+Equity is not justice. Some studies conflate the two. Justice should not be mixed up with equity. More justice work is needed, e.g., Restorative justice -- repairing harm is missing from the discussion of addressing transport inequities. 
+
+## Call 2: Need for creative methods for systems-thinking approach to inequities
 
 On the methodological side, more mixed methods are needed in transport equity research.
 Conceptualizations and standards are usually discussed from purely qualitative or quantitative approaches, a missed opportunity to combine the strengths of both approaches, whether by deep diving into some particular experiences or perceptions through qualitative methods or tailoring more meaningful quantitative analysis after qualitative explorations. For instance, @xieWonCycleRoute2018 finds through interviews and go-alongs with women cyclists that the standard Cycling Level of Service (CLS) tools used by engineers to plan cycling infrastructure misses the critical gendered perspective. Further, @somenahalliAgingTransportMobility2007 surveys older adults to understand their mobility issues, revealing factors that are unseen in standard daily travel surveys.
@@ -783,29 +812,40 @@ Data availability matters, especially when operationalizing emerging theories (i
 - Some categories are missing all together -- mobilities of care.
 - Issue of data availability
 
-## Evaluate interventions and policies
+## Call 3: More direct and explicity links between standards and experienced outcomes
+
+A more robust assessment of the implications of equity standards on life outcomes is still pending.
+Estimating the benefits of increased mobility or accessibility, or reducing affordability burdens and transport externalities needs to be associated with outcomes like life and neighborhood satisfaction, subjective well-being, mental and physical health, social capital, among others.
+
+
+## Call 4: Evaluations of interventions and policies
 
 There is a need to evaluate more equity interventions or policies.
 In our review, only 19 out of 155 studies assess specific projects with an equity lens <!-- ignacio says CHECK THIS, make sure that this is the correct number-->.
 Examples include mode-shift from driving to active school travel [@mammenSchoolTravelPlanning2014], transit fare restructures [@hickeyUsingQuantitativeMethods2010] and spatial analysis of Low Traffic Neighborhoods [@aldredEquityNewActive2021].
 This is a key step towards transport justice; assessing the effects of policies on different dimensions and populations groups and evaluating if a specific context is moving towards equitable standards over time.
 
-## Links between standards and outcomes
 
-A more robust assessment of the implications of equity standards on life outcomes is still pending.
-Estimating the benefits of increased mobility or accessibility, or reducing affordability burdens and transport externalities needs to be associated with outcomes like life and neighborhood satisfaction, subjective well-being, mental and physical health, social capital, among others.
+# Concluding remarks
 
+"Justice is a constant struggle" we need equity frameworks that support the movement for justice. Understanding and tracking transport inequities over time and space; specifically "who", "what", "where", "how" and "why" are integral. Then set policies that address these inequities but stay flexible to changing demands of justice.
 
-# Concluding remark`r word_comment("This section is a work in progress. This will be completed after the team's first read using ideas generated.", "s")`
+Flexible frameworks are important. As mentioned, transport is derived demand – what’s everyone’s demand look like? Past, current, and future? Creating transport equity frameworks that lend themselves to changing as the struggle for Justice moves forward and is resilient to backsliding is crucial. Setting standards from a systems approach: both considering the _positive_ rights (a right to have access to sufficient quality of essential services, for example) and _negative_ rights (mobility of cars must be limited as not to impact air quality, health, safety, and positive rights) must be both be conceptualized. Systems thinking is lacking transport equity literature. 
 
--   TBD
+We thus set out the following calls for transport system decision makers in defining equitable transportation standards, particularly in collecting data that can be used to highlight and track inequalities such that standards can be set.
+
+1. **Understand what transport inequities you are measuring**. Common measures used in transport systems are accessibility measures. What does the measure mean and does potential access relate to experienced outcomes? Next, what does an un equitable and equitable arrangement look like ? This is context specific and locality sensitive. Global north has different standards than global south. 
+
+2. **Understand what institutional context we’re operating in**. For example, what is the structure of transport planning. What Does WHO guidelines make sense to use as a standard for the community's context? 
+
+3. **Understand what institutional context transfer looks like**. A standard set in one context, may not transfer to another community in the same region. 
+
+4. **And be clear with our terms – what is equity and for whom?**. If '15 minute city' is the policy goal, what conceptualization is driving this standard? Is it sufficientarism? Egalitariansm? The standard can be interpreted a multitude of ways. The conceptualization needs to guide the standard. Being explicit about the conceptualization is important.
+
 
 # Appendix
 
-The following are additional details.
-
 #### The search strategy:
-
 ```{r Search-query-A1}
 #| label: fig-A1
 #| fig-cap: "The search query. TS = topic search (keywords, abstract, title). TASCA = subject categories. Green text area transportation system related terms, blue text are equity dimension related terms, purple text are equity/justice conceptualization related terms, and orange text are standards related terms. Hits corresponds the number of papers that the search yielded and was retained into the evidence selection process."

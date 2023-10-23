@@ -696,11 +696,9 @@ In the reviewed corpus, destinations of interest are predominantly employment an
 So what's missing from the "who?" question? We believe, more nuisances perspectives that capture the "who" of inequities is needed. As shown in the variety of methods used, dimensions analysis, and conceptualizations and standards, transport inequalities are multi-dimensional. How decision makers define an equity-deserving community will impact results (e.g., [@rowangouldIdentifyingEnvironmentalJustice2015]). In this sense, standards that are defined need to be sensitive to changing community-based definitions of inequities. Are issues of economic-inequity at the root of transport inequities for a specific community? Are (dis)abilities? Are inequities in the service of transit the focus of a study because it can be improved to address transport inequities and are alternative modes driving these inequities? Access to what sorts of opportunities is driving transport inequities? How do populations, transit modes, and opportunities saught intersect to define the "who" of inequities? Community-based informed understanding of inequities are needed, and tracking how they change are needed. Different slices of analysis are important to different groups, as such, we believe all should be studied with an explicit justice framing. 
   
 ## "What" are the objects of transportation justice
-
 <!-- 
 NOTE: THIS SECTION DISCUSSED AT THE SAME TIME "WHAT" AND "HOW", BUT I SUGGEST TO SPLIT THE DISCUSSION IN TWO PARTS, SO THAT THE "HOW" IS ON PAR WITH OTHER ELEMENTS OF THE ANALYTICAL FRAMEWORK. IF POSSIBLE, IT WOULD BE GOOD TO FURTHER DEVELOP THE "HOW" SECTION, AS IT IS THE MOST IMPORTANT OF THE REPORT!
 -->
-
 Inequities that focus on accessibility/mobility -> opportunity standards are typically travel impedance standards, and affordability thresholds (e.g.,more than 10% of monthly income should not be spent on transport [@rivasHowAffordableTransportation2018] to work and/or other necessary destinations). Oftentimes spatial equity, disparity analysis (spatial mismatch e.g., @mulleyAreNetworkPlanning2015) are operationalized. Infrastructure standards are also suggested -> often times access to destinations is conceptualized as a "right" as such being able to enter the transportation network and physically use it the pre-requisite that accessibility measures do not capture (e.g., (dis)abilities focused). 
 
 Inequities that focus on transport-related environmental externalities -> pollution/noise standards are suggested, often using WHO guidelines or local neighbourhood averages as a comparison.
@@ -750,10 +748,6 @@ The rationale behind the conceptualizations of standards are often implicit with
 
 Some standards are also seemingly arbitrary. For example, @caoIndicatorsSocioSpatialTransport2017 proposes 20 ferries per day to avoid social exclusion for inter-island transport planning in the Philippines in their analysis, but admits that a standard should be politically determined. It is unclear if, for instance, 10 or 30 ferries would make a difference in a specific quality-of-life outcome or if that number is tied to funding/resource constraints. If literature is to recommend standards, researchers need standards linked to grounded outcomes. For decision-makers setting standards, measuring inequities and moving towards setting flexible guidelines for standards is the next step. As such, we believe, firmer justification of standards are lacking in the reviewed literature and are needed. 
 
-<!-- Further, relative measures are often used: these include context, temporal, and group-specific measures such a certain group should have more access in certain situations. Context-matters, but this presents a challenge in policy planning.
-
-Equity is not justice. Some studies conflate the two. Justice should not be mixed up with equity. More justice work is needed, e.g., Restorative justice -- repairing harm is missing from the discussion of addressing transport inequities.  -->
-
 ## Call 2: Need for creative methods for systems-thinking approach to inequities
 
 On the methodological side, we believe more mixed methods are needed in transport equity research.
@@ -779,21 +773,24 @@ We believe that a more robust assessment of the implications of equity standards
 
 
 ## Call 5: Towards evaluations of interventions and policies in and across communities
-<!-- not done-->
-The assessment of the effects of policies contextualize in "Who" is the subject of justice, "What" the distribution of transport-related benefits and burdens looks like, "How" these inequities are measured and benchmarked, contextualized in the "Where" across moving "When"s can allow for equity analyses to assist in formulating "Why?" rationales and ultimately towards transport justice. 
-
-Through explicit connections to justice
-
-ecreative methodsinequalities, for 
-
 We believe there is a need to evaluate more equity interventions or policies. In our review, only 19 out of 165 studies assess specific transport-related policy interventions through an equity lens <!-- double check this number-->. Examples include mode-shift from driving to active school travel [@mammenSchoolTravelPlanning2014], transit fare restructures [@hickeyUsingQuantitativeMethods2010] and spatial analysis of Low Traffic Neighborhoods [@aldredEquityNewActive2021]. The assessment of interventions and tracking associated outcomes can be thought of as a key step towards transport justice. Outcomes of interventions can be compared within and between communities, and cross community comparisons can be created that may expedite the adoption of effective policies that move towards just outcomes.
 
 
-## Concluding remarks
-<!-- not done 
-THERE IS AN OPPORTUNITY HERE TO CIRCLE BACK TO BEZOS SUBORBITAL FLIGHT, TO CLOSE THE REPORT WITH A REMINDER OF WHY IT IS IMPORTANT TO LEARN ABOUT JUSTICE.-->
-In summary, transportation equity analysis is important. Must be framed and tracked to inform the "Why?" rationale. Standards that results should be flexible to account for the fluidity of justice demands. As Bezo flies, we must interrogate _how_ does he do so -- at who's expense and why is that unfair. The rationale for Why is fundamental to fairness and justice. We must be explicit, intentional and clear in our work in equity analysis and towards implementations that move towards justice.
+## Final remarks
+<!-- HERE IS AN OPPORTUNITY HERE TO CIRCLE BACK TO BEZOS SUBORBITAL FLIGHT, TO CLOSE THE REPORT WITH A REMINDER OF WHY IT IS IMPORTANT TO LEARN ABOUT JUSTICE.-->
+To conclude, transportation equity analysis is important. In this report, we outline a conceptual framework for structuring equity analysis that may move us closer to transport justice, summarize findings from 165 relevant transportation equity papers from the academic literature, and critically appraised these findings with the conceptual transport justice framework.
 
+This framework can be succinctly summarized as a classification exercise that explicitly supports a "Why" rationale. In conducting an equity analysis, the subject of justice "Who" must contextualizes the process, "What" the distribution of transport-related benefits and burdens looks like, "How" these inequities are measured and benchmarked, surrounded by the "Where" across temporally changing "When"s all should be explicitly stated. In this way, the rationale for "Why" the equity analysis is important and what root cause of/for (in)justice is motivating the analysis in the first place may be creitical to ultimately mobilizing equity analyses into transport justice.
+
+From this framework and the critical apraisal of the literature, we outline five call to actions for researchers and decision-makers that should be adopted to move equity analysis closer to transport justice. These include:
+
+- Explicit "Why?" rationale along with supporting "Where", "When", "Who", "What: and "How" framings for equity analysis. This means specific conceptualizations and grounded standards.
+- Creative methods of equity appraisal that can be paired with systems thinking; current methods are not used to support this processes.
+- Data availability as a matter of justice: who is not being counted and who should be by whom and why? 
+- More direct links between equity standards and experienced conditions and outcomes. 
+- We shouldn't shy away from appraise of policies. Work towards analysis that can be internationally compared. 
+
+As mentioned in the introductory paragraphs, defining _fairness_ is complex, but complexity is no excuse to shirk the task. A founding rationale for the root "Why?" of injustice is needed to inform equity analysis and set standards: why is it that Bezo (and the likes) ability to fly to space while others are firmly grounded on earth on penny-pinched public transport systems to Bezo-connected job opportunities unfair? What aspects? To whom and in what ways? The rationale for "Why" is fundamental to fairness and justice. We must be explicit, intentional and clear in our work in equity analysis such that standards can be created, equity analysis be tracked, and used to inform policy intervention that move towards justice.
 
 # Appendix
 

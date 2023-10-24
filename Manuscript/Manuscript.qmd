@@ -316,6 +316,29 @@ word_comment <- function(comment, highlight = "") {
   }
 }
 ```
+# Executive Summary
+
+_If we plan to write an executive summary, it should ease readers into the report. The full report is long so this may be a useful 2-3 page summary addition._
+
+# Reading guide
+
+_This portion may be helpful to guide readers to desired sections, if they are not interested in reading the full report. For instance:_
+
+_- If you're interested in why we wrote this report read the "Introduction."_
+_- Curious about the conceptual framework for transport justice? Read the framework in "A framework to analyze questions of justice"_
+_- Want to know about our calls for action to move transport equity analysis and standard-setting substantively towards questions of transport justice? Read the "Moving forward: concluding remarks and calls for action". This section is geared to both researchers and decision-makers._
+
+# Glossary
+_This section may be helpful for readers to clarify our definitions of these terms so they can more easily follow the text and as a quick reference:_
+
+- Fair: 
+- Justice: 
+- Equity: 
+- Equality:
+- Dimensions:
+- Conceptualizations: 
+
+Etc.,
 
 # Introduction
 

@@ -335,10 +335,7 @@ word_comment <- function(comment, highlight = "") {
 pdftools::pdf_convert('just-transportation/just-transportation.pdf',pages = 1)
 ```
 
-```{r cover, echo=FALSE}
-#| label: cover
-knitr::include_graphics("just-transportation_1.png")
-```
+![The pdf version of this report is available [here](https://github.com/soukhova/Transportation-lit-review/blob/main/just-transportation/just-transportation.pdf)](just-transportation_1.png)
 
 # Executive Summary
 

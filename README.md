@@ -6,7 +6,13 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-<img src="just-transportation_1.png" width="612" />
+<figure>
+<img src="just-transportation_1.png"
+alt="The pdf version of this report is available here" />
+<figcaption aria-hidden="true">The pdf version of this report is
+available <a
+href="https://github.com/soukhova/Transportation-lit-review/blob/main/just-transportation/just-transportation.pdf">here</a></figcaption>
+</figure>
 
 # Executive Summary
 

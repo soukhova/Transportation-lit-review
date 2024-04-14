@@ -1,0 +1,975 @@
+---
+title: "Searching for standards of fairness in the transportation justice literature"
+format: docx
+
+#   tandf-pdf:
+#     keep-tex: true
+#   tandf-html: default
+# author:
+#   - name: Anastasia Soukhov
+#     affiliations:
+#       - ref: MAC
+#     orcid: 0000-0003-2402-304X
+#     email: soukho@mcmaster.ca
+#   - name: Ignacio Tiznado-Aitken
+#     affiliations:
+#       - ref: TORONTO
+#     orcid: 0000-0003-2402-304X
+#     email: i.tiznadoaitken@utoronto.ca
+#   - name: Matthew Palm
+#     affiliations:
+#       - ref: UNC
+#     orcid: 0000-0003-2402-304X
+#     email: palmmatt@unc.edu
+#   - name: Steven Farber
+#     affiliations:
+#       - ref: TORONTO
+#     orcid: 0000-0003-2402-304X
+#     email: steven.farber@utoronto.ca
+#   - name: Antonio Páez
+#     affiliations:
+#       - ref: MAC
+#     orcid: 0000-0003-2402-304X
+#     email: paezha@mcmaster.ca
+# 
+# affiliations:
+#   - id: MAC
+#     name: McMaster University
+#     department: School of Earth, Environment and Society
+#     city: Hamilton, ON
+#     country: Canada
+#   - id: TORONTO
+#     name: University of Toronto Scarborough
+#     department: Department of Geography and Planning
+#     city: Toronto, ON
+#     country: Canada
+#   - id: UNC
+#     name: The University of North Carolina at Chapel Hill
+#     department: Department of City and Regional Planning
+#     city: Chapel Hill, NC
+#     country: USA
+# keywords:
+  # - transportation
+  # - equity
+  # - literature review
+
+bibliography: bibliography.bib  
+---
+
+```{r, include=FALSE, message=FALSE, warning=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message=FALSE, warning=FALSE)
+```
+
+```{r setup}
+library(huxtable)
+library(sf)
+library(ggplot2)
+library(tidyverse)
+library(readxl)
+library(DiagrammeR)
+library(scales)
+library(corrplot)
+library(patchwork)
+library(flextable)
+library(ftExtra)
+```
+
+```{r PRISMA-flow-chart}
+Pflow_chart <- grViz("digraph flowchart {
+      node [fontname = Helvetica, shape = rectangle, style = filled, color = grey90]
+      
+      tab1 [label = '6832 references imported for screening']
+      tab1_1 [label = '611 duplicates removed']
+      tab2 [label = '6221 studies screened - title and abstract (step 1)']
+      tab2_1 [label = '4511 studies excluded']
+      tab3 [label = '1710 studies assessed for full-text eligibility (step 2 and 3)']
+      tab3_1 [label = 
+      <1545 studies excluded:<br ALIGN = 'LEFT'/> 
+      &#8226; 1061 No ES (only EC)<br ALIGN = 'LEFT'/> 
+      &#8226; 285 No full-text<br ALIGN = 'LEFT'/> 
+      &#8226; 147 No EC and no ES<br ALIGN = 'LEFT'/> 
+      &#8226; 38 No EC (only ES)<br ALIGN = 'LEFT'/> 
+      &#8226; 13 Other<br ALIGN = 'LEFT'/> 
+      &#8226; 1 Wrong study type<br ALIGN = 'LEFT'/> >]
+      tab4 [label = 'Data from 165 studies extracted']
+
+      blank1[label = '', width = 0.01, height = 0.01]
+      tab1 -> blank1[dir=none];
+      blank1 -> tab1_1[minlen=10];
+      {{ rank = same; blank1 tab1_1 }}
+      blank1 -> tab2
+      
+      blank2[label = '', width = 0.01, height = 0.01]
+      tab2 -> blank2[dir=none];
+      blank2 -> tab2_1[minlen=10];
+      {{ rank = same; blank2 tab2_1 }}
+      blank2 -> tab3
+
+      blank3[label = '', width = 0.01, height = 0.01]
+      tab3 -> blank3[dir=none];
+      blank3 -> tab3_1[minlen=10];
+      {{ rank = same; blank3 tab3_1 }}
+      blank3 -> tab4
+      }
+      ")
+```
+
+```{r, eval=FALSE}
+Pflow_chart |>
+  DiagrammeRsvg::export_svg() |> 
+  charToRaw() |> rsvg::rsvg_png(file="figures/Pflow_chart.png")
+```
+
+```{r import-extraction-data}
+Consensus_all <- read_excel("ALL_Extraction_Results_Feb22_edited.xlsx") |> filter(`Reviewer Name` == "Consensus")
+
+Consensus_only_analysis <- read_excel("ALL_Extraction_Results_Feb22_edited.xlsx") |> 
+  filter(`Reviewer Name` == "Consensus") |> 
+  filter(`Included in analysis` == "Yes")
+```
+
+```{r by-year-and-continent-plot}
+year_cont_plot <- ggplot(data = Consensus_only_analysis,
+                         aes(y = `_Publication year`, 
+                         fill = `_Case study continent`)) +
+  geom_bar(aes(x = (..count..)/sum(..count..)),col="black") + 
+  scale_x_continuous(labels=scales::percent,
+                     breaks = seq(0,0.2, by=0.05),
+                     limits = c(0,0.2)) +
+  xlab("% of papers") +
+  theme_classic() + 
+  theme(text=element_text(size=10),
+        axis.title.y = element_blank(),
+        legend.position = "bottom") + guides(fill = guide_legend(nrow = 2,
+                                                                 title=NULL))
+```
+
+```{r modes-by-type-plot}
+df_mode <- strsplit(Consensus_only_analysis$`_mode`, "; ", fixed = T)
+
+df_mode <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_mode)),
+  mode=unlist(df_mode))
+
+df_mode <- df_mode |> group_by(mode) |> 
+  summarize(count = n()) |> 
+  mutate(count = count/165,
+         sub_ob_j = "What mode?")
+
+mode_plot <- ggplot(data = df_mode, aes(x = forcats::fct_reorder(mode,count), y= count))+ 
+  geom_bar(stat="identity", fill = "coral2", col = "black") + 
+  scale_y_continuous(labels=scales::percent,
+                     breaks = seq(0,0.4, by=0.05),
+                     limits = c(0,0.4)) +
+  coord_flip() +
+  labs(y = "% of mentions in papers", subtitle = "Modes") + 
+  theme_classic() + 
+  theme(text=element_text(size=10),
+        axis.title.y = element_blank())
+```
+
+```{r population-groups-plot}
+df_pop <- strsplit(Consensus_only_analysis$`_population`, "; ", 
+                       fixed = T) 
+df_pop <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_pop)),
+  pop=unlist(df_pop)) |> 
+  mutate(pop = ifelse(pop == "Vulnerable populations (composite)", "Comp. vul", pop))
+
+df_pop <- df_pop |> group_by(pop) |> summarize(count = n()) |> 
+  mutate(count = count/165)
+
+#adding grouping var so they print on plot in the order we want
+df_pop$group <- c(7,9,6,8,2,3,5,10,1,4)
+
+pop_plot <- ggplot(data = df_pop, aes(x = pop, y = count)) +
+  geom_bar(stat="identity", fill = c(rep("skyblue2",each=8), "grey", "skyblue2"), col = "black") + 
+  scale_y_continuous(labels=scales::percent, limits = c(0,0.25), breaks = seq(0,0.25, by=0.05))+
+  scale_x_discrete(limits=(df_pop$pop)[order(df_pop$group)]) +
+  coord_flip() +
+  labs(y = "% of mentions in papers", subtitle = "Population groups") + 
+  theme_classic() + 
+  theme(text=element_text(size=10),
+        axis.title.y = element_blank())
+```
+
+```{r concs}
+df_conc <- strsplit(Consensus_only_analysis$`_equity conceptualization`, "; ", 
+                                                   fixed = T) 
+
+df_conc <- data.frame(
+                              id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_conc)),
+                              conc=unlist(df_conc)) |> 
+                              mutate(conc = ifelse(conc == "Inequitable exposure to externalities", "Ineq. externalities", conc),
+                                     conc = ifelse(conc == "Sufficientarism / Capabilities approach", "Emerg. theories", conc),
+                                     conc = ifelse(conc == "Transport-related exclusion", "TR exclusion", conc))
+
+df_standard_mcat <- strsplit(Consensus_only_analysis$`_type of equity standard2`, "; ", 
+                       fixed = T) 
+df_standard_mcat <- data.frame(
+  id=rep(Consensus_only_analysis$`Covidence #`, lengths(df_standard_mcat)),
+  std_mcat=unlist(df_standard_mcat))
+
+standards_conc <- merge(df_conc, df_standard_mcat, by="id", all = T)
+
+NUM_standards_conc <- standards_conc |> group_by(id) |> summarize(count = n())
+NUM_ENTRIES_standards_conc <- NUM_standards_conc$count |> sum()
+
+standards_conc <- merge(standards_conc, NUM_standards_conc, by="id", all = T)
+
+# standards_conc_plot <- ggplot(data = standards_conc,
+#                               aes(x = `conc`, fill = `std_mcat`)) +
+#   geom_bar() +
+#   labs(x = "Conceptualizations (summarized)", fill = "Standards (main categories)") +
+#   theme_classic() + 
+#   theme(text=element_text(size=10),
+#         axis.title.y = element_blank(),
+#         axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+#   coord_flip()
+
+
+# c("Wellbeing","Vertical equity","Utilitarian","TR exclusion", "Spatial equity", "Rights", "Ineq. externalities", "Horizontal equity", "Emerg. theories")
+```
+
+```{r}
+case_cont_count <- strsplit(Consensus_only_analysis$`_Case study continent`, "; ",
+                       fixed = T)
+case_cont_count <- data.frame(
+  id=rep(Consensus_only_analysis$`_Case study continent`, lengths(case_cont_count)),
+  case_cont=unlist(case_cont_count))
+case_cont_count <- case_cont_count |> group_by(case_cont) |> summarize(count = n()) 
+
+urban_form_count <- strsplit(Consensus_only_analysis$`_Case study urban form`, "; ",
+                       fixed = T)
+urban_form_count <- data.frame(
+  id=rep(Consensus_only_analysis$`_Case study urban form`, lengths(urban_form_count)),
+  urban_form=unlist(urban_form_count))
+urban_form_count <- urban_form_count |> group_by(urban_form) |> summarize(count = n()) 
+
+```
+```{r calculating-destinations-of-interest}
+dest_count <- strsplit(Consensus_only_analysis$`_activity`, "; ",
+                       fixed = T)
+
+dest_count <- data.frame(
+  id=rep(Consensus_only_analysis$`_activity`, lengths(dest_count)),
+  dest_count=unlist(dest_count))
+
+dest_count <- dest_count |> group_by(dest_count) |> summarize(count = n()) 
+```
+
+```{r}
+df_when <- Consensus_only_analysis |> 
+  mutate(pub_year_group = case_when(`Publication year` >= 1992 & `Publication year` <= 2007 ~ "1992 to 2007",
+                                    `Publication year` >= 2008 & `Publication year` <= 2012 ~ "2008 to 2012",
+                                    `Publication year` >= 2013 & `Publication year` <= 2017 ~ "2013 to 2017",
+                                    `Publication year` >= 2018 & `Publication year` <= 2022 ~ "2017 to Mar. 2021")) |>
+  group_by(pub_year_group) |>
+  summarise(count = n())|>
+  mutate(sub_ob_j = "1.\nWhen?",
+         count = count/165) |>
+  rename("sub_ob_j_type" = "pub_year_group")
+
+df_where <- data.frame(case_cont = c("Global North", "Global South"),
+                                count = c(sum(case_cont_count[2:3,2],case_cont_count[4,2], 2), 
+                                          sum(case_cont_count[4:6,2], 2))) |>
+  mutate(sub_ob_j = "2.\nWhere?",
+         count = count/165) |>
+  rename("sub_ob_j_type" = "case_cont")
+
+# THE WHO'S ARE MODE AND POPULATION GROUP
+df_mode_2 <- df_mode |> mutate(sub_ob_j = "3.b Who?\n(mode)") |> 
+  rename("sub_ob_j_type" = "mode") 
+
+df_pop_2 <- df_pop |> mutate(sub_ob_j = "3.a Who?\n(pop group)")  |>
+  rename("sub_ob_j_type" = "pop") |> select(-c("group"))
+           
+# THE WHAT IS ARE DESTINATION group
+df_dest <- dest_count |> mutate(sub_ob_j = "4.\nWhat?",
+         count = count/165) |> 
+  rename("sub_ob_j_type" = "dest_count")
+
+
+df_all_sub_ob_just <- rbind(df_when, df_where, df_mode_2, df_pop_2, df_dest) #|>
+  # mutate(sub_ob_j_type = as.factor(sub_ob_j_type),
+  #        sub_ob_j = as.factor(sub_ob_j))
+```
+```{r}
+# all_sub_ob_just_plot_stacked <- ggplot(data = df_all_sub_ob_just, 
+#                                        aes(x = sub_ob_j, 
+#                                            y = count,
+#                                            fill = sub_ob_j_type,
+#                                            fill = forcats::fct_reorder(sub_ob_j_type, count),
+#                                            label = sub_ob_j_type
+#                                            ))+ 
+#   geom_bar(stat="identity", col = "black") + 
+#   geom_text(size = 3, position = position_stack(vjust = 0.5)) +
+#   scale_fill_manual(values = rep(RColorBrewer::brewer.pal(6,"Pastel2"),10))+
+#   scale_y_continuous(labels=scales::percent,
+#                      breaks = seq(0,1, by=0.1),
+#                      limits = c(0,1)) +
+#   coord_flip() +
+#   labs(y = "% mentions in papers", x = element_blank(), subtitle = "Corpus Breakdown: % mention of topics in When, Where, Who and What") + 
+#   theme_classic() +
+#   theme(text=element_text(size=10),
+#         axis.text.x  = element_text(size = 15),
+#         legend.position="none")
+# 
+# all_sub_ob_just_plot_stacked
+```
+
+```{r}
+df_all_sub_ob_just_reordered <- df_all_sub_ob_just |>
+  mutate(
+    sub_ob_j_type = ifelse(sub_ob_j_type=="Unspecified" & sub_ob_j == "3.b Who?\n(mode)", "Unspecified 3.b",sub_ob_j_type),
+    sub_ob_j_type = ifelse(sub_ob_j_type=="Unspecified" & sub_ob_j == "4.\nWhat?", "Unspecified 4.",sub_ob_j_type),
+    sub_ob_j_type = ifelse(sub_ob_j_type=="Employment" & sub_ob_j == "4.\nWhat?", "Employment 4.",sub_ob_j_type),
+    sub_ob_j_type = ifelse(sub_ob_j_type=="Employment" & sub_ob_j == "3.a Who?\n(pop group)", "Employment 3.a",sub_ob_j_type),
+    sub_ob_j_type = ifelse(sub_ob_j_type=="Other" & sub_ob_j == "3.b Who?\n(mode)", "Other 3.b",sub_ob_j_type),
+        sub_ob_j_type = ifelse(sub_ob_j_type=="Other" & sub_ob_j == "3.a Who?\n(pop group)", "Other 3.a",sub_ob_j_type),
+    sub_ob_j_type = fct_reorder(sub_ob_j_type, count, .fun='median'))
+
+df_all_sub_ob_just_reordered$ID = seq.int(nrow(df_all_sub_ob_just))
+```
+
+```{r}
+df_all_sub_ob_just_reordered_plot <- ggplot(data = df_all_sub_ob_just_reordered, 
+       aes(y = reorder(sub_ob_j_type, count),
+           x = count, 
+           label = sub_ob_j_type,
+           fill = sub_ob_j_type))+ 
+  geom_bar(stat="identity",  col = "grey", alpha=0.8) +
+  facet_grid(rows=vars(sub_ob_j),
+             scales="free_y",
+             space="free_y",
+             switch = "y") +
+   scale_x_continuous(labels=scales::percent,
+                      breaks = seq(0,0.8, by=0.2),
+                      limits = c(0,0.65),
+                      expand = c(0,0))+
+  scale_fill_manual(values=c(rep(RColorBrewer::brewer.pal(9,"Pastel1"),4))) +
+  geom_text(size = 2.5, position = position_stack(vjust = 1), col = "Black") +
+  theme_classic() +
+  theme(strip.text.y = element_text(size = 5.5),
+        strip.background.y = element_rect(fill = "lightgrey"),
+        strip.placement = "inside",
+        axis.title = element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.text.x=element_text(size=5),
+        legend.position = "none",
+        panel.grid.major.x = element_line(colour="grey", linewidth=0.1))
+```
+
+```{r, message=FALSE}
+standards_conc <- standards_conc |> 
+  group_by(conc, std_mcat) |> summarize(total = n())
+
+standards_conc <- standards_conc |>
+  mutate(total_perc_in_all = total/165)
+
+empty_standards_conc <- data.frame(conc = c("Emerg. theories", "Utilitarian"),
+                                   std_mcat = c("Environmental +", "Environmental +"), 
+                                   total = c(NA,NA),
+                                   total_perc_in_all = c(0,0))
+
+totals_standards_conc <- rbind(standards_conc,empty_standards_conc)
+
+#adding the grouping numbers, so the order that vars are printed are in geom_tile() are chronological
+totals_standards_conc$group <- c(13,12,11,
+                    44,43,42,41,
+                    34,33,32,31,
+                    24,23,22,21,
+                    54,53,52,51,
+                    74,73,72,71,
+                    03,02,01,
+                    84,83,82,81,
+                    64,63,62,61,
+                    14,
+                    04)
+
+#adding long definitions, for table under heatmap
+
+
+totals_standards_conc_table <- data.frame(
+  Conceptualizations = c("The distribution of transport system benefits/costs should favourably prioritize disadvantaged groups.",
+                         "Concerning the links between transport system interaction and social exclusions.",
+                         "Evaluation of transport system benefits/costs through wellbeing measures (e.g., livability, quality of life, subjective well being).",
+                         "Equal distribution of transport system benefits/costs across space.",
+                         "Equal distribution of transport system benefits/costs across population."),
+  Conceptualizations_cont = c("Concerning the equitable distribution of externalities (e.g., road safety, congestion, pollution).",
+                         "Concerning legal/human rights of access (e.g., mobilty rights, rights to the city, discriminatory application of laws).",
+                         "E.g., Sufficientarism: minimums informed by individual capabilities. Capabilities approach: the capability of living the life one values (rather than having the right to do so)",
+                         "Maximizing benefits/welfare overall, without consideration of distribution.",
+                         " "),
+  Standards = c("Related to user characteristics (e.g., affordability levels, perceived equity).",
+                "Access to destinations indicators (e.g., # of parks within 30-min transit trip), the use of travel impedance thresholds (e.g., 300m to bus stop).",
+                "E.g., Level of service, quality, universal design standards.",
+                "E.g., noise, air, pollution criteria, safety.",
+                " ")
+)
+
+```
+
+```{r}
+set_flextable_defaults(font.size= 6,
+                       font.family = NULL,
+                       text.align = 'justify')
+
+totals_conc_table_flex <- 
+  prepend_chunks(flextable(totals_standards_conc_table |> select(-c("Standards"))),
+                 part = "body", i = c(1,2,3,4,5), j = 1, as_b(c("Vertical equity: ", "TR exclusion: ", "Wellbeing: ", "Spatial equity: ", "Horizontal equity: "))) |> 
+  prepend_chunks(part = "body", i = c(1,2,3,4), j = 2, as_b(c("Ineq. externalities: ", "Rights: ", "Emerg. theories: ", "Utilitarian: "))) |> 
+  # merge_h(part="header", i=1) |> #header merge
+  merge_at(i=5, j=1:2) |>
+  # align( align="center", part="header") |>
+  delete_part("header") |>
+  border_outer() |>
+  border_inner_h() |>
+  autofit()
+
+totals_standards_table_flex <- 
+  # compose(totals_standards_table_flex,
+  #         i = 1, j = c(1), part = "header", value = as_paragraph(c("Standards"))) |> 
+  prepend_chunks(flextable(totals_standards_conc_table |> select("Standards")),
+                 part = "body", i = c(1,2,3,4), j = 1, as_b(c("Population: ", "Opportunity: ", "Infrastructure: ", "Environmental +: "))) |>
+  merge_at(i= 4:5, j= 1) |>
+  delete_part("header")|>
+  border_outer() |>
+  border_inner_h() |>
+  autofit()
+```
+
+```{r}
+standards_conc_percentages_plot <- ggplot(totals_standards_conc, 
+       aes(x=std_mcat, y=conc, fill= total_perc_in_all ))+ 
+  geom_tile() + 
+  scale_fill_gradient2(low = "#AFAFED", mid= "#3F3FD4", high = "#191970", midpoint = 0.1, limits = c(0,.21), na.value = "grey40") +
+  scale_x_discrete(limits=(totals_standards_conc$std_mcat)[order(totals_standards_conc$group)][c(4,3,2,1)]) + 
+  scale_y_discrete(limits=(totals_standards_conc$conc)[order(totals_standards_conc$group)] ) +
+  geom_text(aes(label = total_perc_in_all |> percent(accuracy = 1)), color = "white", size = 2.5) +
+  theme_classic() +
+  coord_flip()+
+  theme(legend.position = "none",
+        axis.ticks = element_blank(),
+        axis.text.x=element_text(angle=20,hjust=1, colour = "black"),
+        axis.text = element_text(size=7, colour = "black"),
+        axis.title = element_blank()) 
+
+#standards_conc_percentages_plot
+# ggsave("figures/standards_conc_percentages_plot.png")
+```
+
+```{r calculating-concepts-and-standards}
+conc_count <- strsplit(Consensus_only_analysis$`_equity conceptualization`, "; ",
+                       fixed = T)
+conc_count <- data.frame(
+  id=rep(Consensus_only_analysis$`_equity conceptualization`, lengths(conc_count)),
+  conc_count=unlist(conc_count))
+conc_count <- conc_count |> group_by(conc_count) |> summarize(count = n()) 
+
+
+stand_count <- strsplit(Consensus_only_analysis$`_type of equity standard2`, "; ",
+                       fixed = T)
+stand_count <- data.frame(
+  id=rep(Consensus_only_analysis$`_type of equity standard2`, lengths(stand_count)),
+  stand_count=unlist(stand_count))
+stand_count <- stand_count |> group_by(stand_count) |> summarize(count = n()) 
+```
+
+```{r, warning=FALSE}
+#the heatmap on top and table of stand/concept definitions on the bottom.
+standards_conc_percentages_plot_and_table <- cowplot::plot_grid(
+  gen_grob(totals_standards_table_flex, scaling="fixed", fit="auto"),
+  standards_conc_percentages_plot,
+  NULL,
+  gen_grob(totals_conc_table_flex, scaling = "fixed", fit="auto"),
+  nrow = 2, ncol=2, rel_heights = c(0.8,0.7), rel_widths = c(0.8,4) )
+# standards_conc_percentages_plot_and_table
+# ggsave("figures/standards_conc_percentages_plot_and_table_new.png")
+```
+
+```{r echo=FALSE}
+#function for creating comments
+word_comment <- function(comment, highlight = "") {
+  if (isTRUE(knitr:::pandoc_to() == "docx")) {
+    paste0('[', comment, ']{.comment-start id="0" author="Anastasia"',
+           'date="2023-08-12T15:00:00Z"}', highlight, '[]{.comment-end id="0"}')
+  }
+}
+```
+# Introduction {#sect1}
+
+Transportation systems, as a class of essential technologies that facilitate or impede social inclusion and activity participation <!---[@churchTransport2000; @lucasTransport2001; @socialExclusion2003; @cassSocial2005; @casasSocial2007; @prestonAccessibility2007; @paezMobility2009]-->, have increasingly come into focus from the perspective of equity; a lively and rapidly growing literature has emerged on the topic [@martensTransport2016; @karnerAdvancesPitfallsMeasuring2023; @vecchioTransportEquityLatin2020]. <!--@diciommoTransport2017; @guoSystematicOverviewTransportation2020; @karnerFrom2020; @pereiraTransportationEquity2021; @vanweeEvaluating2021; @zhangLiterature2021; @desjardinsExaminingEquityAccessibility2022; --> Aside from an ethical motivation, keeping track of objective and perceived inequalities could be of interest for governing bodies to respond to popular demands for fairness. However, transportation systems are notoriously complex: they simultaneously move people, goods, and information. Emerging technologies and service models can swiftly change the balance of benefits and burdens among a population [@guoSystematicOverviewTransportation2020], turning both users and service providers into digital rentiers [@birchBig2022]. The benefits and burdens of transportation systems are diffuse over space and time posing a challenge in evaluating and tracking inequities. Over space transportation systems engineered to offer higher mobility for people _somewhere_, can simultaneously cut others off from essential opportunities _elsewhere_, as @rajeEngineering2004 poignantly illustrated with examples of infrastructure in the UK. Over time, the shades of policies past can continue to haunt a region and the planet as shown by the legacy of displacement and decay caused by urban highways all across the US [@archerWhite2020] and the time horizon for the impacts of climate change [@markolfTransportation2019].
+
+<!--But complexity is no excuse to shirk away from the task.--> The objective of this work is to scan the state of knowledge in terms of defining and operationalizing "fairness" in the transportation domain. Much research has been devoted to the issues of _measuring_ equity in transportation, including (among many others) [@ramjerdiEquity2006; @delboscUsing2011; @welchMeasure2013; @martensMeasuring2019; @pritchardNew2022]. Further, there are multiple works that discuss the conceptual and philosophical foundations of equity and fairness in transportation [@martensTransport2016; @pereiraDistributiveJusticeEquity2017a; @vanoutriveHow2019]. There have also been, previous reviews of planning documents have investigated equity from narrowly scoped perspectives, such as accessibility [@boisjolyHowGetThere2017] or a particular mode of transportation e.g., cycling [@doranPursuitCyclingEquity2021]. These efforts are valuable to scholars, the public, and decision-makers alike. In our estimation however, there remains a gap in the literature in terms of understanding how standards for equity are developed and implemented within the transportation domain.
+
+To illustrate this gap, we note how @beilerExploring2016 in their exploration of transport equity, cite the following strategies identified by the US DOT to address matters of justice [p. 287]:
+
+- Reduce adverse human health and environmental effects on minority and low-income populations.
+- Include all potentially affected communities in the transportation decision-making process.
+- Ensure that minority and low-income populations receive equitable benefits.
+
+While commendable, the strategies are too vague, which means it is possible to implement them in a myriad ways, either genuinely to comply with the spirit of justice, or else performatively to deceive it [@mcculloughPerformative2023]. Some relevant questions include: how much should the adverse effects be reduced? To zero? Or to some tolerable level of adversity greater than zero? What should that level be and by what criteria? What benefits should be distributed? Should the benefits be based on simple population weights or, contrariwise, advantage more deprived individuals? These questions boil down to the development and use of _standards_ for transportation justice. In this work, we choose to focus exclusively on the academic domain as we know that adoption of equity concepts in planning practice has lagged developments in academic work [@pereiraTransportationEquity2021; @boisjolyHowGetThere2017; @linovskiEquityTransportationPlanning2020; @doranPursuitCyclingEquity2021; @litmanEvaluatingTransportationEquity2022]
+
+Supporting the creation of (more) just transportation systems involves understanding the production and management of transportation benefits and costs; how they are distributed and what values are implemented (and by whom) in the form of standards [@pereiraDistributiveJusticeEquity2017a; @shellerMobilityJusticePolitics2018; @pereiraTransportationEquity2021]. In this spirit, our work seeks to make two significant contributions. First, it outlines a conceptual and flexible framework with supporting definitions for structuring transportation fairness and equity analysis. Second, it applies the framework to collate the existing academic knowledge that undertakes transportation equity analysis supported by equity standards and conceptualisations. We hope the findings and the presentation of academic knowledge will be useful in supporting the development and implementation of equity standards for transportation planners, policy and decision-makers. 
+
+In contrast to previous reviews on how to measure inequality in transportation systems, this work is concerned with the implied or explicit standards that are used to judge whether the measured inequalities are fundamentally “fair” or unacceptable. The present study achieves this objective by scanning the state of academic knowledge in defining “fairness” in the transport domain. Borrowing from philosophers of justice [@jaggarPhilosophicalChallengesGlobal2009], we ask the following questions to the literature and use them as a framework for presentation:
+
+-	**What** are those benefits and burdens of transportation systems? Are they qualified in sidewalk widths, bus frequency, travel times, accessibility, or some other consideration?  
+-	**Who** benefits and is burdened by transportation systems? Along which lines of identity are transportation inequities examined?
+-	**Where and when** are equity standards applied? What are the differences between the research depending on location, context-specific planning processes and time of publication? 
+-	**How** are equity standards and inequities measured? Are they infrastructure provision thresholds, acceptable pollution levels, or some other kind of cut off? How are these studies born out of broader notions of justice, i.e. disability rights, environmental justice, egalitarianism, or something else? 
+
+<!-- The structure of this review is as follows. After this introduction, the stage for our investigation is set by laying out some important definitions and describe the methods used for searching, selecting, and reviewing the relevant literature. This is followed by a summary of the findings and their critical appraisal. We conclude with some calls for action to improve the practice of setting and using standards of fairness for transportation justice. -->
+
+# Background {#sect2}
+
+In the introductory section the terms "justice", "fairness", and "equity" are used relatively loosely. This was done purposefully. As noted, people often have strong intuitions of what is "fair", "just", and "equitable" which may or may not match those of the authorities who set the standards of fairness. But in democratic societies, the authority of all those charged with the business of governing should derive from the will of the people. It is therefore important to explicitly state how we plan to use these words - what we mean by "justice", "fairness", and "equity". 
+
+**Justice** is an end goal, a desirable state of affairs that we are morally obligated to achieve. Justice is attained when people "give and receive whatever they are due" [@jaggarPhilosophicalChallengesGlobal2009, pp. 1-2], and it ceases to exist when there are persons or groups that are denied "access to the opportunities they need to lead a meaningful and dignified life" [@karnerTransportationEquityTransportation2020, p. 440].  Justice is a fluid concept, because it depends on the desirability of different states of affairs, which may change between populations, over space and time. That said, it is possible to distinguish several forms of justice  [@jaggarPhilosophicalChallengesGlobal2009; @pereiraDistributiveJusticeEquity2017a; @karnerTransportationEquityTransportation2020].
+
+- **Retributive justice** is concerned with the proportional retribution of wrongdoers with relation to legitimate punishers and the innocent [@sep-justice-retributive].
+- **Reparative (or restorative) justice** focuses on the reparation of caused harm; it centers 'reintegrative shaming' to restore victims, wrongdoers, and the community according to moral values [@tylerRestorativeJusticeProcedural2006].
+- **Procedural justice** strives to ensure that the views and preferences of all stakeholders are fairly accounted for in the decision-making and inter-personal procedures affecting their lives and communities [@tylerRestorativeJusticeProcedural2006].
+- **Distributive justice** is perhaps the most commonly studied form of justice [see @jaggarPhilosophicalChallengesGlobal2009, p. 2; @pereiraDistributiveJusticeEquity2017a], and its main concern is the way the benefits and burdens of the tangible and intangible products of society are collected by different segments of a population.
+
+It might be argued that all of the above touch on forms of distributive justice. To illustrate, retributive justice, is usually achieved by distributing intangibles of a society's moral values like "freedom" (e.g., of movement, of association) as benefits, and/or the distribution of tangible resources as burdens (e.g., fines as a punishment). Reparative justice could look like the distribution of benefits and burdens to redress past wrongs, for example by asking those who have benefited from said wrongs, even if unwittingly, to shoulder a bigger fiscal burden in order to cover programs that mete benefits to those who are still harmed by past wrongs. Procedural justice could be the distribution of the benefits (e.g., the right to voice an opinion as a recognized stakeholder in the process) and burdens (e.g., the effort required to develop an educated opinion) of the processes that lead to decisions with collective consequences. 
+
+From this perspective, we can then speak of the _purposes_ of distributive justice: to mete out retribution _fairly_, to repair past harms, and to ensure that procedures offer _equitable_ opportunities to influence outcomes. From this perspective, equity and fairness are the "instruments" of justice, the tools by which society advances towards the end goal of justice. 
+
+**Equity**, as conceptualized alongside distributive justice, tends to encompass tools to understand the distribution of benefits and burdens of things among a population; often emphasizing those with the least advantage and equality in their outcomes. In the transportation domain, the term is somewhat loaded because it is perceived as stemming from the authority of the state and is meant to assist with decisions about regulating and financing transportation spending [@karnerTransportationEquityTransportation2020]. Here, we are in agreement with @karnerTransportationEquityTransportation2020 that equity analysis should not be seen as an end in and of itself, but rather as a means to gather information about actual and perceived inequities. In this respect, the analytical tradition of equity, at least in transportation planning, means that the relevant models become embedded in the "political ecology of the estimated truth" [@kingModels1993]: in principle their assumptions and scope must be open and transparent, or else they may be more vulnerable to misuse and even abuse as tools of subjugation.
+
+**Fairness**, in contrast to equity, is somewhat more complicated to define. The concept does not have the same history of development as an analytical tool, and can be interpreted in numerous, and possibly discordant ways. This is convincingly demonstrated by @martensFair2021 in their study of the application of Title VI of the Civil Rights Act of 1964 in accessibility planning in the US. Title VI explicitly talks about the distribution of benefits derived from Federal funding: "[n]o person in the United States shall, on the ground of race, color, or national origin, be excluded from participation in, be denied the benefits of, or be subjected to discrimination under any program or activity receiving Federal financial assistance." However, as @martensFair2021 show, there are several ways to comply with regulations while achieving different outcomes, ranging from the banal (do not _knowingly_ discriminate), to the substantive (compensation for past discrimination within a societal context that recognizes harm was done, i.e., reparative justice). What kind of justice does fairness serve in each case? It depends on the rationale for seeking justice in the first place. Our reading of @martensFair2021 is that fairness is a yardstick that is best deployed _a priori_ than _a posteriori_, for doing the latter risks rationalizing the outcomes rather than driving them.
+
+**Standards** are a way of making concrete statements about fairness. Returning to the ambiguities in Title VI discussed by @martensFair2021, the attainment of justice depends on the standard used to indicate fairness. For example, explicit non-discrimination constitutes a very weak standard that takes aim at the actions of agencies instead of the recipients of the benefits. Accordingly, any distribution of benefits would be considered fair, as long as the agency does not explicitly and knowingly target or deny benefits to particular groups. The standard provides conditions to determine whether a situation is _fair_. A similarly weak standard is a _Pareto improvement_, whereby it is possible to concentrate the benefits as long as no group is worse off compared to the status quo. A policy is fair as long it does no harm. A somewhat more strict standard, a Pareto-Plus improvement, stipulates that an intervention is fair when all groups receive at least _some_ (non-trivial) benefits; the size of the benefits for each group is irrelevant. In contrast to the notion of "do no harm", such a standard embodies the ideal that no one is denied benefits. An egalitarian standard would weigh the benefits or burdens by population, and fairness is achieved when each group gives or receives in proportion to their size. In contrast, an affirmative action standard is even stricter, since it requires the benefits to be distributed in a non-egalitarian way that favors those who are still harmed by past or present discriminatory practices.
+
+## A framework to analyze questions of justice {#sect2.2}
+
+<!-- To summarise the discussion of definitions, justice is a goal of social progress. But to understand what that goal is, we must clearly define standards of fairness. Equity analysis is tool to measure where the actual or perceived distribution of the burdens and benefits of the products of transportation systems stand with respect to the standard, in other words, instruments to see how close or far we are from a just situation. -->
+
+Give the discussed definitions of "justice", "fairness", "equity" and "standards", we approach the literature with an analytical apparatus inspired by the framing of @jaggarPhilosophicalChallengesGlobal2009 for philosophical questions of justice.^[Similar questions are found peppered throughout the literature. This is done either explicitly, as for example in @karnerTransportationEquityTransportation2020, who ask "of what", "for whom," and "how much" in reference to equity; or implicitly, as in @gosslingUrban2016, who asks of the outputs ("what?") of transportation (exposure, space, access) and "for whom?" (gender, age, ethnicity).]. According to @jaggarPhilosophicalChallengesGlobal2009, Western philosophy has approached the issue of justice by asking "Where?", "When?", "Who?", "What?", and "How?", applying them to a particular domain or sphere of life relevant to justice. 
+
+In the case of justice in transportation, the question of **"Where?"** is paramount, as it might be argued that transportation generates inequalities by their very nature. By concentrating the effects of space-time convergence (for instance, by providing access to a transit system or a highway), an inequality is automatically generated. The burdens of transportation, in contrast, are often diffuse. They are incrementally paid, for example by a distributed population in the form of taxes, or by a population with a different spatial distribution in the form of poor health. As such, the answer to "Where?" is the definition of the spatial boundaries. 
+
+Conventionally, the question of **"When?"** refers to the temporal circumstances within which the demands of justice have application. In the cause of transportation justice, we ask about the temporal aspects of transportation systems, as examples: _when_ did the equity analysis take place and under what historical policy context; _the right time_ to invest in transportation infrastructure and as a result when to generate a spatial inequality [e.g., @rabelloEvaluation2015]; for _how long_ the burdens and benefits can still be associated to a specific transportation intervention; or even _timelines_ of reparative justice interventions that reconcile the shadows of past transportation-related injustices. 
+
+When answering **"Who?"**, we inquire about which entities should be regarded as subjects/arbiters of justice, meaning those entitled to make claims of moral consideration from the perspective of justice. To make it tractable, this question is often approached through the filter of population groups, which may include several concurrent traits, such as gender identity, ableness, ethnicity, age, caste, and income. Often, it is appropriate to reflect on the intersections between traits, given differences in a person's lived experiences. A possible complication in the case of transportation is that disentangling the "Who" from their mobility tools is not always straightforward. Although a person is not their mode of transportation, there are large segments of the population who live in situations where they cannot extricate themselves from the mobility tools they can use, either because they have driven themselves out of choices [@laveryDriving2013], or have been driven out of choices by factors beyond their control [e.g., captive users of a single mode @jacquesRescuing2012; @cherancheryInvestigatingPerceptionCaptive2018]. <!-- In societies that have grown into transportation monocultures with a predilection for automobility [@millerCollaborative2011] there may actually be less choice about mobility tools than we would like to assume.-->While it is important to avoid conflating the "Who" with the "What", for analytical purposes we need to be mindful of the connection between aperson and their mobility tools. <!-- In the case of transportation, in addition to members of the public who use transportation systems, there is another category of **Who**, that stands possibly in opposition to users, namely the entities charged with providing services, maintaining infrastructure, and so on. These could be ministries or departments of transportation, transit agencies, public works departments and others having the power to act upon transportation (in)justices. Identifying these entities is relevant to elucidate who is responsible, for example for apportioning the benefits or mitigating the burdens of transportation.-->
+
+**"What?"** asks which entities should be regarded as objects of inequities, meaning which categories of things should be distributed in a just manner. To understand the distributional implications of transportation systems, it is essential to understand what do they _produce_? Transportation systems can be seen as space-time convergence technologies, mobility tools that improve the rate at which time is traded for space. They can increase the speed of movement: for instance, sidewalks and traffic lights enable potential movement of pedestrian and vehicles (i.e. mobility) and the realization of mobility through travel to needed/desired destinations. But as the adage goes, travel is derived demand [@mokhtarianUnderstanding2001; @whalenMode2013; @redmondPositive2001; @paezEnjoyment2010]. For this reason, we cannot stop at only considering mobility but must consider its ulterior goal-- reaching destinations. Coupled with land use, mobility creates accessibility to needed or desired activities. Transportation justice, thus, involves proximate (mobility tools and mobility) and ulterior (accessibility and activity opportunities) objectives. These considers all fold under objects of transportation justice, the "What?". 
+<!-- At their most fundamental, transportation systems are space-time convergence technologies, tools that improve the rate at which time is traded for space. They usually do this by increasing the speed of movement: sidewalks facilitate walking, traffic lights facilitate the ordered flow of vehicular traffic, and a launching pad makes it possible for a rocket to take off. With complex interlocking parts (sidewalk, road, traffic sign, parking regulations), transportation systems produce _mobility_, the potential for movement. The realization of these potentials happen through travel. However, as the adage goes, travel is derived demand, which seems to hold for most situations [e.g., @mokhtarianUnderstanding2001; @whalenMode2013<!-- @redmondPositive2001; @paezEnjoyment2010; --><!--]. For this reason, we cannot stop at considering mobility but must consider its ulterior goal-- reaching destinations. In combination with land use systems (the spatial distribution of destinations/opportunities), mobility produces _accessibility_-- the potential to reach places where activities that are needed or desired. We can think of the objects of transportation justice as being _proximate_ (the tools of mobility, mobility itself), and _ulterior_ (accessibility, opportunities for activity participation). The burdens of transportation are also many and varied. Some are direct and paid directly by the traveler (e.g., travel time, out-of-pocket costs), but many others are indirect and related to network externalities (e.g., exposure to pollution, road accidents). -->
+
+The next question is **"How?"**, and it relates to the allocation of various objects of justice ("what") to various subjects of justice ("who") in various circumstances ("when" and "where"). Equity standards are a tool for answering this distributive question: how do we allocate burdens and benefits? Standards are thresholds that, when operationalized effectively define what is fair. The thresholds can be quantitative (e.g., square meters of green space per capita), or they can be qualitative descriptions (e.g., do not knowingly discriminate), or a mix of the two. Some examples include: maximum travel distance/cost/time to or from key destinations, levels of maximum exposure to externalities (i.e., noise or air pollution),un/fulfilled needs, and dis/satisfaction with travel. A number of conceptualisations exist to support us when approaching this question, and we can draw from concepts in transport-related social exclusion, transport disadvantage, and/or transport poverty, which are typically based on equity principles, such as utilitarianism, Sen's capabilities approach, or Sufficientarianism. 
+
+Lastly, convincing answers to the above questions require a supporting rationale: a **"Why?"** [@jaggarPhilosophicalChallengesGlobal2009]. This is perhaps the most slippery of all the questions posed here. Justice is an inherently social construct. Asking **Why?** amounts to asking what sort of social contracts regulate human interactions, or in other words, what are the rules that our collective will to believe imposes on each of us. These contracts can be defined by constitution, but there are often unwritten and possibly contested variants. In this way, analyzing the "Why?" in the reviewed literature is not the focus of this review, partly because answers to "Why?" are not explicitly stated and challenged inference. As such, our focus is on the standards of fairness that, combined with the use of equity analysis, can help us understand how better to move towards just transportation systems and better formulate answers to "Why?".<!-- To see an example of "Why?" drawing from the Canadian Charter of Rights and Freedoms, see the Appendix.-->
+
+## Methods {#sect2.3}
+  
+This review examines the breadth and depth of the academic literature on transportation to identify the extent to which standards for equity are defined and employed. In this task, we follow the Joanna Briggs Institute (JBI) approach to the conduct of scoping reviews, an approach that builds upon the Arksey and O'Malley (2005) framework [@petersUpdatedMethodologicalGuidance2020]. The review is also guided by the Preferred Reporting Items for Systematic Reviews and Meta-Analyses, particularly the extension for scoping reviews (PRISMA-ScR) which is consistent with the JBI approach [@triccoPRISMAExtensionScoping2018]. The use of these methods allows us to explore, in a consistent and organized manner, a relatively specialized topic within the broader transportation literature.
+
+The primary research question and the protocol were initially defined by the authors, a group of experts in the field of transportation. The initial draft of the protocol was refined from preliminary searches of related-reviews [e.g., @zhangLiterature2021; @pereiraDistributiveJusticeEquity2017a; @vecchioAccessibilityCapabilitiesApproach2021], and in consultation with a University of Toronto Research Services Librarian and a Liaison Librarian in City Studies. 
+
+The search strategy was first developed iteratively using **inclusion** and **exclusion** criteria [@petersUpdatedMethodologicalGuidance2020]. For the inclusion criteria, the mnemonic PCC (population, concept, and context) was adopted. The search strategy was refined iteratively, adding topic search terms by stages (e.g., terms in the title, abstract or key words). The terms were bundled by means of logical connector terms "AND" and "OR". These stages are summarized as follows (see Appendix section @sec-sect61 for details): 
+
+1. An initial limited search of Web of Science (WoS) Core Collection (containing journals, conference proceedings, and books published all over the world) was undertaken to identify key documents. Separate searches using the terms 'transportation' and 'equity' were generated. From these searches, we examined the text contained in the titles and abstracts, the index terms, and subject heading searches when available. As we developed a clearer outline of the literature, we refined the terms used for the search. This took the form: ("Transport" OR "Transit" OR "Car\*" OR "Walk" OR "Bike"...**1**) AND ("Equity" OR "Justice" OR "Fair"...**2**), where **1** and **2** signify additional terms relating to 'transportation' and 'equity', respectively.
+
+2. Upon inspection of the preliminary search results and after achieving a consensus among the authors, the set of search terms related to 'equity' was expanded into three sets of terms. The first describes theories and concepts of equity, the second describes the object of justice (i.e., the "what" in our analytical framework), and the third describes terms referring to standards (i.e., the "how"). All three sets of terms were augmented following an iterative process of refinement. The final search query took the following general form: ("Transport" OR "Transit" OR "Car\*" OR "Walk" OR "Bike"...**1**) AND ("Equity" OR "Justice" OR "Equity" OR "Fair"...**2**) AND ("Accessibility" OR "Mobility" OR ...**3**) AND ("Standard" OR "Threshold" OR ...**4**) where **1**,**2**,**3**, and **4** signify additional terms included in the sets combined with "OR" logical connectors.
+
+After testing the search strategy on WoS Core Collection, we proceeded to apply to an augmented list of databases. The databases used were: WoS General Collection-Science Citation Index Expanded, WoS Social Sciences Citation Index, and Transportation Research International Documentation (TRID). The definitive version of the search was completed and exported by the lead author on March 21st, 2021.
+
+The nature of the search strategy tended to be overly inclusive since we aimed to reduce the risk of omitting relevant material. The authors and a team of research assistants trimmed the initial corpus of documents from 6832 down to 165. All documents were first excluded based on title/abstract relevance where two research assistants voted, and a third from the authorship team broke ties. Then, 1710 documents were assessed based on full-text eligibility, again with each being voted on by two research assistants and an authorship team member tie-breaker. Next, using a data extraction template and workflow that was pilot-tested with a subset of papers, the authorship team extracted data from the eligible documents. *Covidence* [@covidenceCovidence2023], an online application for literature screening, was used for all steps of selection and data extraction on the full export of literature. Covidence is designed for collaborative work, and helps to document the work of multiple reviewers. The evidence selection workflow, (PRISMA) flow diagram [@pagePRISMA2020Statement2021], data extraction template, and some sample data extractions can be consulted in Appendix @fig-figA2.
+
+To summarize, 6832 documents entered screening and ultimately 165 were retained for data extraction as part of the evidence corpus. These 165 pieces of evidence are relevant to the transportation domain and contain an explicit or inferred equity conceptualisation and standard.
+
+# A critical appraisal of the lay of the land {#sect3}
+  
+This section critically threads together the trends identified in the corpus through the data extraction process (@fig-figA2)<!-- update this cross reference!-->. Specifically, conceptualisations and standards (the "How") and their applications to the objects of justice (the "What"), the subjects of justice (the "Who"), and under which situations ("When" and "Where"). As an overview, @fig-fig1 visualises the prominence of each category under "When?", "Where?", "Who?", and "What?". "How?" with its conceptualisations and standards is visualised in the following @fig-fig2.<!-- For the reasons reviewed, setting standards (that is, making statements of fairness) is a highly context-specific endeavor. While our search strategy and review tries to be as faithful to the literature as possible, it does not allow us to lay claim to reporting about on-the-ground transportation justice efforts from a truly global perspective.-->  
+
+```{r plotting-who-what-where-when-plot-fig1}
+#| label: fig-fig1
+#| fig-cap: "The proportion of category for each When, Where, Who and What; papers do often contain more than one topic and those papers are represented multiple times. Topic categories were generated upon data extraction."
+
+df_all_sub_ob_just_reordered_plot
+ggsave("figures/df_all_sub_ob_just_reordered_plot_new.png")
+```
+
+```{r plot-standards-concs-perc, warning=FALSE}
+#| label: fig-fig2
+#| fig-cap: "The prominence of Hows: the proportion of equity standards (vertical axis) within each type of equity conceptualisation (horizontal axis) category."
+
+knitr::include_graphics("figures/standards_conc_percentages_plot_and_table_new.png")
+```
+
+## "When" and "Where" is transportation considered a sphere of justice {#sect3.1}
+
+Within our corpus most papers (`r ((case_cont_count$count[4] + case_cont_count$count[5]+ case_cont_count$count[6])/165) |> percent()`) focus on case studies in the Global North, with many studies from North America (particularly USA and Canada), Europe (particularly France, Spain and Northern Europe), Oceania (Australia and New Zealand), and Asia (Japan and Israel).  Though their subject matter is varied, their spatial context mainly pertains to North America and Europe, and thus more often than not, in conversation with more developed and formal government transport planning apparatuses and technologies [e.g., planning for equitable high-speed rail, as in @monzonEfficiencySpatialEquity2013; autonomous vehicle technology, as in @eppenbergerOpportunitySharedAutonomous2021; or on the public consultation processes, as in @reddySafeguardingMinorityCivil2010]).
+
+The smattering of studies from the Global South are predominately from Asia, notably China, but also India, Thailand, Iran, Philippines, and Indonesia. The next most common focus within the literature from the Global South is from South America. Many of these studies mention a systemic absence of evidence relevant to the region [@vecchioTransportEquityLatin2020]. Despite the growing recognition in the literature of the interconnections between transport development, social exclusion, and poverty [@benevenutoExaminingTransportNeeds2020], a number of studies underscore ongoing neglect of the social dimension of transport during the planning stage [@benevenutoExaminingTransportNeeds2020; @boisjolyAccessibilityMeasurementsSao2020]. Many studies also point at affordability as one of the main mobility barriers in the region [@falavignaAssessingInequalitiesPublic2016; @rivasHowAffordableTransportation2018], while some highlight multi-dimensional concerns such as public transport accessibility and quality of walking environments that contribute to mobility inequalities [@tiznadoaitkenRoleAccessibilityPublic2018].
+
+Studies pertaining to Africa are even less numerous compared to the South American literature.
+A shared characteristic among the studies from these two continents is a scarcity of official transport data [@friedMeasuringSustainableDevelopment2020] and a reliance on policy guidelines developed by international organizations. These studies also incorporate the use of informal transportation options and the pressures to develop road network infrastructure (which tends to support car dependency) over meeting the mobility/accessibility needs of citizens [@thondooSmallCitiesBig2020]. To address these challenges, researchers compile databases based on open and geo-referenced data, calculate objective and/or subjective measures [@berheAdaptationDissonanceQuality2014], and focus on advancing transport justice for low to medium income countries (LMIC) by aligning their goals with external policy guidelines such as the Sustainability Development Goals (SDG), particularly those related to universal accessibility [@friedMeasuringSustainableDevelopment2020].
+
+Of all the studies reviewed, `r (urban_form_count$count[3]/sum(urban_form_count$count)) |> percent()` focus on urban and suburban settings and are highly varied in their research aims. To give an example, @coxQualitativeStudyAccessibility2020 qualitatively examine cycling as a mode of travel for people with disabilities in a typical mid-size town in the UK. @ampeImpactChildBike2020, on the other hand, work to identify the lateral clearance that motorists should maintain when passing cyclists with children seats. <!-- While both studies refer to the same objects of justice ("what", i.e., the right to the road and cycling), the subjects of inequities (the "who") are different (people with disabilities and children), and the "where", that is, the geographical context for the examination of fairness, differs as well.--> The remainder of the studies reviewed focus on rural regions (`r (urban_form_count$count[2]/sum(urban_form_count$count)) |> percent()`). We highlight the work of @caoIndicatorsSocioSpatialTransport2017, who examined transportation disadvantage in remote places which rely on inter-island ferry trips in the rural Philippines. Similarly, @parrySocialVulnerabilityClimatic2018 studied remote communities in the Amazonian region, and suggest that "increasing accessibility through road building would be maladaptive, exposing marginalized people to further harm and exacerbating climatic change by driving deforestation" (pp. 125).
+
+Overall, studies from the Global South often have some key differences in focus compared to the Global North:
+
+- affordability-as-a-barrier at the user- or policy maker- level is more often the motivation in work from the Global South;
+- the expression of greater tensions in investing in new transportation infrastructure, such as roads in rural/under-developed areas, compared to prioritization of non-car modes. Studies centered in the Global North often focus on the later; and 
+- more significant data availability limitations and reliance on 'informally' collected data. 
+
+We surmise these differences center on the direct economic outcomes tied to transport infrastructure. Often, work from the Global South does not engage as intimately with emerging mobility technologies that have large capital costs. Informal aspects present in transport planning also have a more overbearing presence. In the present day, countries in the Global South still struggle with the consequences of past colonialism under Northern states. This has left them more reliant on primary sector exports (lower efficiency, lower national GDP) under growing global financial markets, and with more fragile democracies. We infer, because of lower data availability, reliance on crowd-sourced or ‘informally’ collected data, and more extreme needs for ‘sufficient’ transport, analysis of transportation inequities is often cast along economic lines.
+
+We characterise the Global North and South literature as laying at different points temporally on the transport inequity continuum. As Global South' formal planning processes operate under stricter financial constraints, they rely on more informal processes to address unmet needs - a significant source of equity concerns [e.g, informal transit in Nairobi @friedMeasuringSustainableDevelopment2020; populations living in informal residents in Mumbai @sharmaPublicTransitAccessibility2021]. Operationalization of international standards are also more relevant [e.g., WHO noise and air pollution in Delhi @apparicioCyclingOneMost2021]. In contrast, these standards are no longer as relevant in the Global North [e.g., $NO_2$ pollution near roadways in Montreal are under the WHO guideline @carrierApplicationThreeMethods2014], though perhaps being more relevant at a time of lower transport-related development. In these ways, the Global South temporally lags Global North development. However, this lag presents opportunities for all: for the Global South, to adopt relevant enhancements to Global North formal equity planning processes [e.g., indicator creation for disadvantages groups @cuiSpatialAccessPublic2020] and not repeat their mistakes [e.g., from the entrenched car-centric development @warrenDevelopingEquitableSustainable2015, to the disproportionate contribution to carbon-intense mobility @chancelCarbonInequalityKyoto2015]. For the Global North, reckon with their contributions to uneven development globally and environmental impacts as well as adopt relevant aspects from informal planning processes. <!--`r word_comment("I condensed this paragraph. The idea here is the global south temporally lags the global north in how equity is assessed/planned for, but both can learn lessons from these differences. Both corpuses can be seen at different points of equity assessment developlment. Why is this the focus? Because, I can't clearly see differences in --one year or multiple time frames, if they do before and after evaluations or just dianoses, etc.-- in the GS vs GN as you suggest. If you don't like what's written, or if it's not clearly a temporal angle, we can maybe talk about how the focus of 'who' changes depending on the time published (i.e., it used to be car vs. transit, but now it's car vs. all other modes -- especially cycling and walking). However, you can also see how 'time' here is just another way to examine the who/what/where/when/how." , ".")` -->
+
+## "Who" are the subjects of transportation justice and their mobility tools {#sect3.2}
+
+### Population groups
+Turning to the "Who?" of population group characteristics in @fig-fig1, the majority focus on "Income", especially the lowest-income groups who face lower mobility and accessibility and higher costs and exposure [@peungnumsaiGridBasedSpatialAnalysis2020; @zhaoUnequableSpatialAccessibility2020; @falavignaAssessingInequalitiesPublic2016]. Evidence suggests that low household income is a significant determinant of transport-related inequities [e.g., urban access to public transport in Thailand [@peungnumsaiGridBasedSpatialAnalysis2020], access to urban employment opportunities in Brazil [@boisjolyAccessibilityMeasurementsSao2020], and unfavorable rates of environmental noise, air pollution, and green space in Netherlands [@kruizeEnvironmentalEquityRole2007]. Yet, low-income is not universally associated with lower transport-related benefits for every object of justice - context matters. For instance, in Sheffield, UK @mearsUnderstandingSocioeconomicEquity2019 demonstrate that historically working-class (lower-income) neighbourhoods have _more_ access to green space than other neighbourhoods. This is potentially due to historic urban planning approaches, though the quality is less than average. Similarly, @bertrandMeasuringMappingDisparities2008 find that lower income groups do not always have below average accessibility depending on the granularity of analysis.
+
+"Age" is the second most common category within population group: these papers highlight differences in age-related capabilities. For instance, @martinez-jimenezAccessibilityCultureEducation2019 and @arranz-lopezSocialSpatialEquity2019 investigate travel distances/times to various opportunities, demonstrating how age is associated with differences in opportunity access. The most extreme age groups are commonly of focus: namely, school-aged children and older populations. For children, analysis of wellbeing [@laszkiewiczChildrenGreenWalk2020], safety and access to schools [@sharmaSpatialSocialInequities2022, @corazzaMethodologyEvidenceCase2020], and promoting active travel [@mackieOvercomingBarriersCycling2009; @mehdizadehWalkingTimeSchool2017] are common-place. Papers that focus on older adults similarly investigate transport-related wellbeing [e.g, @chenSpatialAnalysisFramework2020], access to age-specific destinations [e.g. @chengInvestigatingWalkingAccessibility2019], and improved options to meet unmet travel needs [e.g., @nordbakkeTransportUnmetActivity2015].
+
+Typically, the corpus features papers that focus on intersecting (multiple) characteristics. However, the exception are what we classify as studies that focus on  "(Dis)abilities" or "All Populations". These categories are often of exclusive focus. Studies with a "(Dis)abilities" focus assess travel capabilities, namely through physical accessibility and universal design guidelines [e.g., @parkJourneyVisuallyImpaired2017; @chiscanoImprovingDesignUrban2021; @orellanaWalkRollMapping2020]. "All Populations" papers make no distinction in population. This is done, for instance in @kitaDoesLevelTransportation2020, who investigates disparities in accessibility to food-stores and their  self-reported capability/frequency of going outdoors. Often in both "(Dis)abilities" and "All Populations" focused papers, an im/explicit motivation is access (to necessities and desired destinations) for all.
+
+As mentioned, the corpus is largely intersectional. For instance, a large proportion of papers apply a "Composite Vulnerability Index"; an _informed_ combination of several individual traits like low income, unemployment and immigrant status. These indices are generated from official government sources or author-informed census data creation methods. As an example, the Neighbourhood Equity Index (NEI) is a neighbourhood-ranked measure of vulnerability created by the City of Toronto and used in @awuorInfluenceEnvironmentalHealth2019 to examine disparities in premature death. Other works use national census indicators such as the social and housing deprivation index [e.g., @pucciInequalitiesJobrelatedAccessibility2019] or explore transport disadvantage, equity in policy implementation, or transport-related mortality burden by means of census measures (e.g., household poverty) and transport-related accessibility indicators [e.g.,  @aldredEquityNewActive2021; @iungmanImpactUrbanTransport2021; @sunPublicTransportAvailability2021; @scheurerSpatialAccessibilityPublic2017]. Similarly, Environmental Justice (EJ) indicators have been used in the US literature to identify neighbourhoods that have a higher than average proportion of low-income and non-white populations and evaluate the equity impacts of transportation projects [e.g., @rowangouldIdentifyingEnvironmentalJustice2016; @parkTransitParksEnvironmental2021; @reddySafeguardingMinorityCivil2010].
+
+Intersectional considerations are so prevalent in the corpus that papers studying "Gender", "Race/ethnicity", "Education", or "Employment" level are infrequently studied exclusively. Only a few papers focus exclusively on gendered differences in active transportation [e.g., @adlakhaMindGapGender2020, @xieWonCycleRoute2018], race/ethnicity's relationship to green space proximity [@silvaEnvironmentalJusticeAccessibility2018], and culturally-appropriate opportunities [e.g., @wangModelingSpatialAccessibility2011]. Papers that focus *solely* on "Employment" or "Education" level are absent all together. Furthermore, "Other" population groups are also frequently considered in the corpus: this is a catch-all category that includes group populations less commonly the subject of research e.g.,  veterans and access to specific-healthcare needs [@mooneyTravelDistanceBarrier2000], pregnant people and access to services [@vadrevuMeasuringSpatialEquity2016], and youths who live in foster care [@batscheUsingGISEnhance2012]. Overall, the diversity of population groups considered in the corpus, often intersectionally, demonstrates the variety of transportation-equity concerns addressed in the corpus.
+
+### Modes (mobility tools)
+Travel mode, though modifiable, is intertwined with individual identity, posing challenges for equity analysis. In this sub-section, we choose to view the mode of travel primarily as those who use the mode, hence the subject of justice (i.e., the “who”), but occasionally, this will be enjoined to an object of justice (i.e., a “what”).
+
+Public transit characterises the majority of the corpus (@fig-fig1). Despite transit being perceived unfavourably by some [@paezEnjoyment2010; @mellaDrivers2021], it is often viewed as the only and primary mobility option mode for many [@jacquesRescuing2012; @welchMeasure2013; @cherancheryInvestigatingPerceptionCaptive2018]. The public transit focused papers assess a variety of topics such as: food desert identification [@mckeyCrowdsourcedMappingHealthy2020], barrier-free transportation for people who face disabilities [e.g., @jimenez-espadaResearchProblemUniversal2021; @liuStatusQuoChallenges2019] and people with autism [@limFacilitatingIndependentCommuting2021; @feeleyValidationParatransitSkills2019]. We infer from the corpus that public transit is seen as a public good and hence a natural object of justice. Accordingly, public transportation is adaptable to meet the demands of justice, for example, by funding it sufficiently to provide barrier-free transport for most, despite challenges like low densities, fiscal constraints and political will [@markardUnsustainabilities2023].
+
+Transit also plays a central role in multimodal comparisons for transport equity analysis: these papers feature "Walk" or "Car" or some other category in @fig-fig1. For instance, @brusselAccessAccessibilityCritique2019 compares public transit, pedestrian and road network accessibility measurements in the context of SDG 11.2 in Bogota. @renneWhatHasAmerica2018 reviews natural disaster evacuation plans, focusing on car-less households in the USA and emphasizing transit and pedestrian networks. A few papers also frame transit as being in direct competition with car travel or use their comparison as a benchmark [@golubUsingPrinciplesJustice2014; @martensJusticetheoreticApproachDistribution2012]. For instance, @warrenDevelopingEquitableSustainable2015 propose car ownership standards for Havana, Cuba, acknowledging the tension between mobility needs in transit under-served areas and emission reduction goals. However, this framing is not universal, transit is sometimes seen by the corpus as a mode to fulfill individual capabilities. As an example, @smithAccessibilityCapabilityMinimum2012 explores perspectives about transport needs and costs to achieve perceived sufficient living standards for those living in rural areas in the UK. Notably, papers vary in the importance they place on climate urgency, with some focusing more on satisfying *all* sufficient individual needs while planning for less car-dependent cities in the future.
+
+Following transit, pedestrian travel ("Walk") is the second most studied object of justice. Pedestrians represent a unique convergence of "what" and "who," utilizing their own bodies for mobility. Papers focusing solely on walking often use walkability scores to assess neighbourhood quality [@evansAccessibilityUserNeeds2015] pedestrian mobility in different demographics [@towneUsingWalkScore2016; @kimNeighborhoodEnvironmentWalkability2016], or urban peripheral regions [@blecicCapabilitywiseWalkabilityEvaluation2021], measuring equity distribution. Some use walkability to gauge public health and urban vitality [@sungResidentialBuiltEnvironment2015; @mccormackRelationshipClusteranalysisDerived2012]. Furthermore, pedestrian-focused papers often discuss walking as a bridge to connect multiple modes as part of active transportation systems: linking walking, with cycling ("Bicycle"), and "Transit". Topics include how active transport impacts children's physical activity [@mammenSchoolTravelPlanning2014], walkability as a car alternative [@bertrandMeasuringMappingDisparities2008], and tensions between modes leading to unsafe walking conditions [@siuAssessmentPhysicalEnvironment2019; @ferenchakEquityAnalysisProactively2019].
+
+Papers with a pedestrian focus also often see walking as a bridge to connect multiple modes: they discuss 'walkability' as part of active transportation, which focuses on both walking, bicycle and/or transit. Concepts discussed include how active transport contributes to children's physical activity levels [@mammenSchoolTravelPlanning2014], walkability as an alternative to car predominance [@bertrandMeasuringMappingDisparities2008] or tension that exists between modes, creating unsafe conditions for walking [@siuAssessmentPhysicalEnvironment2019; @ferenchakEquityAnalysisProactively2019].
+
+The third most studied category is "Car". Unlike transit and walking, cars are rarely the sole focus. When studied in the corpus, they're critically compared with transit or considered in areas with inadequate transit [@kimmelStructuralBarriersComprehensive2018; @aljoufie2016]. Upon the rise of automobility, walking and cycling were in the way; <!-- though being the way people got around historically [@robertsShort1998] and cycling's efficiency at a lower impact-->Transit came to be seen as a social service and sometimes as a hindrance to the full realization of automobility. We surmise that the corpus' focus on non-car modes is a reckoning with automobility's legacy and ongoing requirements of disproportionate amounts of space, public subsidies and government support that underestimates its true cost [@gosslingSocial2019; @timperleyFight2021] including externalities like air pollution or safety [@fengTradeoffsMobilityEquity2014; @houstonProximityLicensedChild2006]. Other than "Car" being compared to walk, cycle or transit, some papers reflect the existing ways of travel and alongside "Car" including "Other" (@fig-fig1) options namely wheelchair accessible taxi and/or paratransit [@marquezFactorsAffectingPersonal2019; @wilkinsonmeyersLiveOrdinaryLife2015], travel on waterways [@vadrevuMeasuringSpatialEquity2016; @caoIndicatorsSocioSpatialTransport2017; @parrySocialVulnerabilityClimatic2018], motorcycles or other micro-mobility [@berryInvestigatingFuelPoverty2016; @savingmothersDidSavingMothers2019; @tiwariDevelopmentPublicTransport2021], or by emergency vehicle [@pedigoInvestigationDisparitiesGeographic2010; @patelDeterminingGeographicAreas2007].
+
+Papers that pay no particular attention to any mode are "Unspecified": as examples, a focus on road infrastructure or road network distances [@wismadiSpatialPreferenceModelling2014; @mishraEIABasedComparative2014], travel needs generally [@titheridgeSocialExclusionAccessibility2008; @benevenutoExaminingTransportNeeds2020], realized travel [@abasoloEquityUtilizationAccess2001a], or externalities of realized travel [@iungmanImpactUrbanTransport2021].
+
+<!-- 
+### Who's missing?
+As shown, "who" is the subject of inequities has been well studied. So what's missing from the "Who" question? We believe, more nuisances perspectives of inequities are needed. We must go beyond the focus on the low-income transit rider; positioning intersectionality of socio-economic and mode-use to create community-based definitions of equity and tailored standards are critical.
+
+As shown in the variety of methods, dimensions, conceptualisations and standards used transport inequalities are multi-dimensional. How decision makers define an equity-deserving community will impact results e.g., [@rowangouldIdentifyingEnvironmentalJustice2015]. In this sense, standards that are defined need to be sensitive to changing community-based definitions of inequities. Are issues of economic-inequity at the root of transport inequities for a specific community? Are (dis)abilities? Are inequities in the service of transit the focus of a study because it can be improved to address transport inequities and are alternative modes driving these inequities? Access to what sorts of opportunities are driving transport inequities? How do populations, transit modes, and opportunities sought intersect to define the "who" of inequities? A community- informed understanding of inequities and tracking how it changes are needed. Different slices of analysis are important to different groups, as such, we believe all should be studied with an explicit justice framing. -->
+
+## "What" are the objects of transportation justice {#sect3.3}
+<!-- Though the literature reviewed most commonly considers low-income as a socio-demographic characteristics of populations deserving equity as either by itself or alongside other characteristics (`r prettyNum(round(df_pop$count[8]+df_pop$count[4] * 100, 1))`\% of the papers). Many employ accessibility methods (e.g., walking accessibility to open space [@tangWalkingAccessibilityNeighbourhood2021]) but others use qualitative or mixed-methods to gain perspectives of inequalities that are typically cross-dimensional (e.g., @milanLiftingPeripheralFortunes2017 asks Medellin, Colombia residents living in TOD areas compared to non-TOD areas about the impact of TOD on their wellbeing based on income group and gender). The use of qualitative methods allows for a more nuanced reflection of residents perspectives, and different inequities emerge.  -->
+From the corpus reviewed, we infer that one of the most fundamental benefits of transportation systems are mobility (enabling or impeding movement) and accessibility (the ease of reaching destinations). These benefits are sometimes valued by themselves but are often seen by the corpus as instrumental to achieve an ulterior goal (e.g., activity participation and associated wellbeing benefits). For example, although vehicle kilometers traveled (VKT) is sometimes seen as a useful policy instrument [@zhaoRethinking2021], travelling more is not necessarily a sign of advantage when accessibility is low [@paezAccessibilityHealthCare2010], and short trips may be a sign of advantage [@parkTransitParksEnvironmental2021]. For this reason, although the right to the road (and transportation systems more generally) is important, the literature leans heavily on the ulterior object, namely accessibility to destinations.
+
+### Impartial to destination interaction
+Most papers take a broad approach, with `r (dest_count$count[8]/165) |> percent()` focusing on "Unspecified" destinations (@fig-fig1). They examine various equity dimensions across different transportation modes. Some papers focus on factors that impact the trip itself like infrastructure quality, safety, and service level [@zheEvaluationSharedUse2008; @prasertsubpakijEvaluatingAccessibilityBangkok2012; @furstBestBadPractices2013 ; @lattmanPerceivedAccessibilityPublic2016]. Others analyze trips tailored for specific groups like women or people with disabilities [@russellPedallingEquityExploring2021; @wilkinsonmeyersLiveOrdinaryLife2015], often with a consideration of what constitutes 'sufficient' quality of life [@churchillTransportPovertySubjective2019]. In sum, these papers reveal the multifaceted nature of transportation systems: they serve utilitarian purposes while also shaping user experiences.
+
+### Partial to destination interaction
+Among studied destinations, "Healthcare" services (`r (dest_count$count[6]/165) |> percent()`) and "Employment" (`r (dest_count$count[5]/165) |> percent()`) receive the most attention (@fig-fig1). Papers on healthcare often highlight disparities in services, like @wangModelingSpatialAccessibility2011, who assess access to Mandarin-speaking family physicians for Chinese speakers in Toronto. Similarly, papers focusing on employment [e.g., @allenSizingTransportPoverty2019a] may do so since it is the most common trip purpose and is often correlated with other trip activities like shops, recreation, and other services, often identifying transportation-poor neighbourhoods. These studies typically use travel surveys, census data, and point-of-interest databases, and benefit from well-developed and institutional data that represents ‘typical trips,’ especially in the Global North where this data is more readily available.
+
+Other activity types receive less focus but serve distinct purposes beyond typically studied travel patterns. "Shopping" destinations (`r (dest_count$count[7]/165) |> percent()`) often aim to identify food deserts [@choiFoodDesertsActivity2013; @jiaoHowIdentifyFood2012; @mckeyCrowdsourcedMappingHealthy2020; @kimAssessingSocialSpatial2020]. "Education"-related papers (`r (dest_count$count[3]/165) |> percent()`) explore children's active transportation to school [@larkinsAccessibleTransportationBuilt2011] or universal design [@larkinsAccessibleTransportationBuilt2011]. Places of "Leisure" (`r (dest_count$count[6]/165) |> percent()`) prompt accessibility questions like spatial distribution [@xuSocialInequalitiesPark2017], accessibility [@mavoaAreaLevelDisparitiesPublic2015], and explores of inequity [@mearsUnderstandingSocioeconomicEquity2019]. Fewer papers cover "Community" destinations (e.g., public service centres, places of community support or worship) (`r (dest_count$count[2]/165) |> percent()`) or "Childcare" (`r (dest_count$count[1]/165) |> percent()`), but they're integral to study holistic activity participation [@albertsRebuildingWomenLivelihoods2016; @smithAccessibilityCapabilityMinimum2012]. The lack of information about community destinations, especially for children, is notable in the literature broadly [@desjardinsChildren2022].
+
+### Dimensions of measurement
+
+Defining the object of justice (the "What"), whether specific destinations or the trip itself, shapes measurements of inequality crucial for tracking progress towards transport justice. In the reviewed corpus, we characterize these dimensions as a focus on: 
+
+- accessibility and mobility; 
+- transport-related environmental externalities; 
+- centering human-health as related to transport systems; 
+- human safety related to vehicular-traffic; and 
+- cross-dimensional classifications.
+
+As discussed next, these intersect with conceptualizations of fairness and applied standards, forming the philosophical foundations for assessing justice in transportation.
+
+<!-- ### What's missing?  -->
+
+<!-- What's missing from the "What?" in the equity analyses of the literature reviewed is the consistently explicit rationale for the object of justice. Specifically, "What?" are the benefits and burdens of a transportation system in terms of its: accessibility and mobility, or environmental externalities, or human-health externalities, or traffic related safety, or multi-criteria mix. In the inter-disciplinary analysis of transport systems, crystalising "What?" is the object of justice can create a stronger foundation to select appropriate methods to determine fairness and support the "Why?", the rationale of justice. In the corpus reviewed, strong conceptualizations of the object of justice often falls short. -->
+
+## "How" is fairness determined {#sect3.4}
+
+### Conceptualisations of fairness 
+The philosophical foundations that are explicit or most often implicitly inferred from the corpus are broadly characterized as follows (@fig-fig2 details definitions). These categories emerged as we reviewed the corpus and are used to discuss trends, but are not an exhaustive list of conceptualizations.
+
+- Vertical equity (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "Vertical equity", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Transportation related social exclusion (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "TR exclusion", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Well-being (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "Wellbeing", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Spatial equity (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "Spatial equity", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Horizontal equity (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "Horizontal equity", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Inequitable externalities (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "Ineq. externalities", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Rights (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "Rights", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Emerging theories (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "Emerg. theories", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Utilitarian (`r df_conc|> group_by(conc) |> summarise(total = n()) |> subset(conc == "Utilitarian", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+
+A few slices of the literature and how they are characterized by their foundational conceptualisations of fairness are summarized. For example, a slice of the corpus is supported by broader "Rights" conceptualisations: these papers often focus on equity for people with disabilities or non-car users and associated challenges accessing transport infrastructure [@jimenez-espadaResearchProblemUniversal2021; @daamenAssessingGapPublic2008; @bharathyRevisitingClearFloor2018]. While many papers are underpinned with the right to the city (the _right_ to participate in the production of urban space [@lefebvreDroitVille1967]) [@adliRightCityApplying2018], others emphasize legal _Rights_ like ADA regulations [@bharathyRevisitingClearFloor2018] or the goal of _access for all_ in land-use transportation master plans [@limFacilitatingIndependentCommuting2021].
+
+In another set of the corpus, distributions are examined through concepts of "Horizontal" and "Spatial equity", often using quantitative methods to assess distributional disparities without explicit justice rationales. Examples include setting travel impedance thresholds [@shenMeasuringSpatialAccessibility2020] and mapping accessibility indices spatially across populations [@monzonEfficiencySpatialEquity2013] or population-groups [@sharmaPublicTransitAccessibility2021]. These papers may also address traffic-related air and noise pollution or urban temperatures. In these papers, equity is theoretically achieved if similar levels are attainable for all populations (horizontal equity) or spatial areas (spatial equity), discussions rarely explore both minimum and maximum levels contributing to inequities from a justice perspective.
+
+Papers that center "Well-being" assess what constitutes a satisfactory life in relation to transportation; this set of literature uses mixed-methods and, in contrast to the last set often explicitly identifies objects of injustice. Some use physical activity guidelines and surveys to understand activity related to active transportation infrastructure [@adlakhaMindGapGender2020; @auchinclossDesignBaselineDescription2020; @mccormackRelationshipClusteranalysisDerived2012]. Mixed or qualitative methods combined with health-related outcome standards (e.g., travel times for emergency treatment [@savingmothersDidSavingMothers2019], or premature mortality [@awuorInfluenceEnvironmentalHealth2019]) lead to firmer justice identifications. 
+
+Another research branch, often quantitative with some qualitative or mixed-methods studies, focuses on "Transport-related social exclusion", "Vertical equity", and/or "Sufficientarian/capabilities". They also often explicitly identify objects of justice and link standards to tangible and welfare-informed outcomes. They focus on groups from perspectives of disadvantage such as: social exclusion and transport poverty [@allenSizingTransportPoverty2019a; @delboscTransportProblemsThat2011; @churchillTransportPovertySubjective2019]], food deserts [@mckeyCrowdsourcedMappingHealthy2020], and energy poverty [@robinsonDoubleEnergyVulnerability2020; @berryInvestigatingFuelPoverty2016; @berryDistributionalEffectsCarbon2019]. 
+
+### Standards and methods of measuring fairness
+With the frequent way conceptualisations are applied within the corpus detailed, the following categories of standards that overlap with at least one conceptualisation are included (see @fig-fig2 for definitions):
+
+- Opportunity standards (`r df_standard_mcat |> group_by(std_mcat) |> summarise(total = n()) |> subset(std_mcat == "Opportunity", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Population standards  (`r df_standard_mcat |> group_by(std_mcat) |> summarise(total = n()) |> subset(std_mcat == "Population", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Infrastructure standards (`r df_standard_mcat |> group_by(std_mcat) |> summarise(total = n()) |> subset(std_mcat == "Infrastructure", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+- Environment+ standards (`r df_standard_mcat |> group_by(std_mcat) |> summarise(total = n()) |> subset(std_mcat == "Environmental +", select = "total") |> mutate(total = total/165) |> pull(total)  |> percent()`)
+
+<!-- Opportunity standards often address horizontal and spatial equity, focusing on travel impedance metrics like speed, distance, or cost. For instance, @chenImpactHighspeedRail2017 set a 4-hour high-speed rail travel limit for municipalities to be considered "comfortably connected." Similarly, @yenisettyMeasuringAccessibilityVarious2020 deem a travel distance of less than 1,200 meters sufficient for local transit access. @shenMeasuringSpatialAccessibility2020 highlight regions where hospital access exceeds a 1-hour car journey, indicating inequity. These standards serve as benchmarks to assess disparities in travel impedance, acting as difference thresholds. -->
+Papers suggesting "Opportunity" standards often employ quantitative methods to analyze disparities and assess distributional fairness. Many stem from travel impedance thresholds based on speed, distance, or cost [@chenImpactHighspeedRail2017; @yenisettyMeasuringAccessibilityVarious2020; @shenMeasuringSpatialAccessibility2020]. Inequality measures like the Gini coefficient and poverty measures are used to empirically define travel impedance thresholds [@vanderveenOperationalizingIndicatorSufficient2020; @tiznadoaitkenRoleAccessibilityPublic2018]. Further, methods tangential to travel impedance, like limiting transport expenditure to 10% of monthly income [@rivasHowAffordableTransportation2018], or addressing spatial mismatch [@mulleyAreNetworkPlanning2015], pinpointing areas of relative regional inequities are also used. Notably, many papers suggesting "Opportunity" standards include cross-dimensional considerations, employing similar methods but tailored to different focal points. For instance @peungnumsaiGridBasedSpatialAnalysis2020 suggest service benchmarks of equal supply and demand of public transit, revealing "Horizontal equities" as well. Others conceive the externalities of transportation system as trade-offs and aim to maximize transport-related benefits (i.e., time savings, emissions reductions, congestion reductions, user fares) through optimization/location-allocation methodologies e.g., [@fakhrmoosaviIncorporatingTravelTime2021; @zhengAreabasedEquitablePricing2020; @wismadiSpatialPreferenceModelling2014].
+
+"Population" standards are often founded on "Well-being" conceptualisations, assessing what constitutes a satisfactory life related to transportation from a variety of socio-demographic and spatial angles. Methods include establishing threshold based on questionnaires and comparisons to recommended physical activity levels e.g. [@auchinclossDesignBaselineDescription2020; @mccormackRelationshipClusteranalysisDerived2012; @kimNeighborhoodEnvironmentWalkability2016; @timperioSafetyNumbersDoes2015], region-relative comparisons in health outcomes in a spatial unit e.g. [premature mortality rates @awuorInfluenceEnvironmentalHealth2019], spatial access benchmarks based on population-related characteristics e.g. [supermarket access @murphySupermarketAccessTransport2017; hospital access @pereiraGeographicAccessCOVID192021], summative per capita benchmarks e.g., [decent living energy consumption levels @raoDecentLivingEmissions2012], and community-informed spatial boundaries e.g., [EJ defined communities @rowangouldIdentifyingEnvironmentalJustice2016]. While most of these papers use quantitative or mixed-methods approaches, some employ exclusively qualitative methods to explore themes [@berheAdaptationDissonanceQuality2014].
+
+Papers that feature both "Population" and "Opportunity" standards are often founded on "Vertical equity", "Well-being", and/or "Transport-related social exclusion" conceptualisations. They feature mix-methods, with questionnaires and qualitative approaches for "population" standards and quantitative methods like accessibility indices for "opportunity" standards. Census data and household estimates within specific travel distances or times to key destinations identify social exclusionary situations [@chenExploringTravelCharacteristics2010; @danielsProposalAccessibilityPlanning2011; @sunPublicTransportAvailability2021; @sharmaPublicTransitAccessibility2021], linkages between transport disadvantages [@delboscTransportProblemsThat2011], areas experiencing transport poverty [@allenSizingTransportPoverty2019a; @churchillTransportPovertySubjective2019], food deserts [@mckeyCrowdsourcedMappingHealthy2020], or transport-related energy poverty [@robinsonDoubleEnergyVulnerability2020; @berryInvestigatingFuelPoverty2016; @berryDistributionalEffectsCarbon2019]. They employ various methods, such as clustering techniques [@mohriClusteringMethodMeasuring2021]. Some exclusively use qualitative methods to analyze survey data on travel willingness/barriers or conduct interviews on unmet activity needs [@chenExploringTravelCharacteristics2010; @mehdizadehWalkingTimeSchool2017; @nordbakkeTransportUnmetActivity2015]. <!-- Understanding the reasons for travel that did not occur, whether due to preference or constraints, remains challenging (A. Paez and Farber, 2012).-->
+
+"Infrastructure" standards offer another perspective on fairness, commonly grounded in "Rights" conceptualisations. Discussions of rights are twice as frequent in this segment of the corpus compared to other conceptualisations. These papers most frequently address the rights of non-car users and populations with mobility disabilities. Though various methods are applied, infrastructure and environmental audits as well as qualitative approaches are most prominent. Infrastructure audits compare existing infrastructure against universal design best practices [@odeckEconomicAppraisalUniversal2010; @larkinsAccessibleTransportationBuilt2011; @jimenez-espadaResearchProblemUniversal2021; @perezdelhoyoParticipatoryManagementImprove2021] or investigate elements correlating with mode use by specific population groups [@moniruzzamanInvestigation2016]. Qualitative methods include interviews/surveys on perceived access [@marquezFactorsAffectingPersonal2019; @mateo-babianoBicycleSharingAsia2017; @furstBestBadPractices2013; @velhoEffectTransportAccessibility2016; @parkJourneyVisuallyImpaired2017; @limFacilitatingIndependentCommuting2021; @stjernborgAccessibilityAllPublic2019; @desjardinsGoing2021] and assessment of standards under best-practice criteria [@daamenAssessingGapPublic2008; @velhoEffectTransportAccessibility2016; @bharathyRevisitingClearFloor2018].
+
+Additionally, "Infrastructure" standards papers sometimes encompass multiple dimensions, moving beyond rights (to the infrastructure) and suggest "Opportunity" and/or "Population" standards. These papers often employ "Vertical", "Horizontal", and "Spatial equity" lenses. These multi-dimensional papers often refer to guidelines and propose composite indices. For example, [@racheleNeighbourhoodSocioeconomicTransport2017a] integrate various transport network properties to define an indicator supporting walkability and public transport access. Others evaluate infrastructure quality [@xuSocialInequalitiesPark2017], accident severity [@benevenutoExaminingTransportNeeds2020; @appleyardTransitCorridorLivability2017], and user-groups, especially disadvantaged ones with respect to vertical equity [@prasertsubpakijEvaluatingAccessibilityBangkok2012] of multi-criteria indicators. Some focus explicitly on affordability and barriers, proposing infrastructure enhancements for better inclusivity, especially for the most disadvantaged [@basuPracticalFrameworkBenchmarking2019; @songWomenWheelsGender2019; @welchEquityTransportDistribution2013], grounded in transport-related social exclusion [@kentPrioritizingLowstressEquitable2019] or capabilities approaches [@smithAccessibilityCapabilityMinimum2012].
+
+Our corpus minimally focuses on "Environmental+" standards. These studies predominantly examine "inequitable externalities", possibly because environmental burdens of transportation are addressed more broadly in other literature (e.g., environmental justice). However, these papers included in our corpus present some interesting insights. They often use traffic-related air and noise pollution, green space, urban design, urban air temperature, health outcomes, and physical activity guidelines to assess transport-related externalities. Methods employed are primarily quantitative or mixed-methods, identifying inequalities through Gini coefficients [@fengTradeoffsMobilityEquity2014] and some develop composite indices [@agostfelipInclusiveModelAssessing2021; @mirandaBenchmarkingSustainableUrban2012; @corazzaMethodologyEvidenceCase2020], occasionally incorporating spatial analysis [@jephcoteGeospatialAnalysisNaturally2013; @carrierApplicationThreeMethods2014]. Commonly, many use established thresholds or health guidelines e.g., WHO guidelines for Active Aging and targets included in the United Nations’ SDG [@agostfelipInclusiveModelAssessing2021], OECD or WHO thresholds for traffic noise level, $NO_2$ levels, available green space and $PM_{2.5}$ level [@kruizeEnvironmentalEquityRole2007; @iungmanImpactUrbanTransport2021; @apparicioCyclingOneMost2021; @khomenkoLiveableCityHealthy2020; @muellerSocioeconomicInequalitiesUrban2018]. These metrics are sometimes criticized for their general applicability. Nonetheless, their use provides interpretable values for tracking progress, offering comparability across communities, unlike accessibility measures, which vary in methods and assumptions. 
+
+# Moving forward: calls for action {#sect4}
+
+Justice is a goal of social progress. To understand what that goal is, clearly defining standards of fairness is essential. Measuring context-specific evidence of transport inequities is necessary to build knowledge of injustices and inspire creative interventions that advance the cause of justice. Understanding and tracking transport inequities over time and space, specifically knowledge of "Where" (spatial context), "When" (temporal context), "Who" (the subject of justice, i.e., population groups and mobility tools they use), "What" (the object of justice, i.e., what benefit/burden is produced by the system and its distribution), "How" (the conceptualisation and standards used) and especially "Why" (the rationale and not included in the focus of this review) is essential. Armed with this knowledge, policy can be designed to address these inequities while remaining adaptable to evolving justice demands. 
+
+Flexible frameworks are important as transport is derived demand. What is (in)formally considered (in)essential today, could change during the next pandemic or technological revolution. Creating adaptable transport equity frameworks that lend themselves to change with the demands of justice is as important to ensure resiliency to backsliding. From the diverse corpus reviewed, we argue for the necessity of setting standards from a systems approach, considering both _positive_ rights (a right to have access to sufficient quality of essential services, for example) and _negative_ rights (mobility of cars must be limited to reduce their impact on air quality, health, safety, and positive rights). 
+
+In this spirit, this work makes two significant contributions. It outlines a conceptual and flexible "Where", "When", "Who", "What" and "How" framework with supporting definitions for structuring transportation fairness and equity analysis. It also applies the framework in the synthesis and critical appraisal of 165 academic articles that undertake standard- and conceptualisation- supported equity analysis; these studies use equity analysis as instruments to gauge proximity to their context's just situation. Following this framework and the reviewed literature it answers:
+
+-	**What** are those benefits and burdens of transportation systems? 
+-	**Who** benefits and is burdened by transportation systems? Along which lines of identity are transportation inequities examined?
+-	**Where and when** are equity standards applied?
+-	**How** are equity standards and inequities measured? 
+<!--Maybe we should answer these questions explicitly here? Maybe we should also urge practitioners to adopt this flexible framework in their equity synthesis?-->
+From what's reviewed and using the framework we recommend five calls to action.
+
+## Call 1: Underpin standards with rigorous concepts of justice {#sect4.1}
+
+The conceptual grounding for standards is often left implicit within the literature: for example, @muellerSocioeconomicInequalitiesUrban2018 suggests the relative risk of mortality from transport-related air pollution should not be higher in deprived groups than the general population. While the coonceptual justice foundations are not explicitly declared, we infer the standard conceptualizes _wellbeing_ and could be in service of reparative justice. To move equity analysis outputs towards just transport futures, explicit inclusion of justice rationales (the "Why?") should become more common place. We must be clear with our terms – what is equity and for whom?
+
+Standards serve as benchmark for fairness, yet some standards are seemingly arbitrary in the reviewed literature. For example, @caoIndicatorsSocioSpatialTransport2017 proposes 20 ferries per day to avoid social exclusion for inter-island transport planning in the Philippines, though acknowledging the standard should be politically determined. It is unclear from the paper however, if selecting a different benchmark such as 10 or 30 ferries would make a difference in any specific object of justice (e.g., accessibility to particular destinations) or if that number is tied to funding or resource constraints. As another example, what is the conceptual underpinning of the 15-minute city, where 15 minutes is the standard for travel times. Is it sufficientarism? Or is it egalitarianism? The standard can be interpreted in a multitude of ways. We argue that the framing used to conceptualize justice must guide the selection of the standard. As @martensFair2021 convincingly show, being explicit about "Why" is important. 
+
+For decision-makers, setting standards, measuring inequities and moving towards setting flexible guidelines for standards that are also compatible with community-informed calls for justice is the next step for transportation equity planning. If we assume that one function of the academic literature is to recommend standards, researchers must connect compatible equity conceptualisations and standards to justice frameworks. Currently, these fundamental connections are sorely needed.
+
+## Call 2: Develop creative methods for systems-thinking approaches to equity {#sect4.2}
+
+On the methodological side, transportation equity research would benefit from wider use of mixed-methods. Concepts and standards are often discussed from purely qualitative or quantitative approaches. This is a missed opportunity to combine the strengths of both approaches, whether by deep diving into some particular experiences or perceptions through qualitative methods or tailoring more meaningful quantitative analysis after qualitative explorations. As mixed-method examples, @xieWonCycleRoute2018 find through interviews and go-alongs with women cyclists that the standard Cycling Level of Service (CLS) tools used by engineers to plan cycling infrastructure misses the critical gendered perspective. Further, @somenahalliAgingTransportMobility2007 survey older adults to understand their mobility issues, revealing factors that are unseen in standard daily travel surveys.
+
+While disparity analysis is frequently used in the reviewed literature, the standards suggested do not often align with practical application. For example, metrics of accessibility (usually measured with travel impedance cut-offs of between 15 to 60 minutes depending on the destination, population group and mode) are used to show descriptive differences among areas and groups but with scarce implications as to the experience of travelers. How low of an accessibility index is too low? Relatedly, given sufficient accessibility levels are reached, excessively high accessibility values will result in high inequalities. Are inequalities of a certain level an issue? This lack of discussion makes translating results from these equity analysis into policy practice that may move conditions towards justice challenging. Creative methods and discussion of metrics of quantitative accessibility with intention of practical intervention should be paired with results; they should yield interpretable results and the explicit discussion of minimum _and_ maximum values in the distribution of the object of justice (the "What?"), as applicable, is critical.
+
+Other times, when analysis engages with metrics that may be tied to particular concepts of equity (like Gini coefficient or Theil index), they fall short in assessing whether the results are good or bad [e.g., @mijaresEquityAnalysisUrban2013]. If a Gini coefficient of 0 means that all people have the same access to public transport stops, what does it mean if the result is 0.2, 0.3, or 0.4? Is this good or bad news? How should a decision-maker interpret this? Are new policies needed to reduce that number to a certain threshold, orienting future interventions? These questions usually remain unanswered in the literature despite its importance. These measurements can also bring some challenges and pitfalls (as recently summarized by @karnerAdvancesPitfallsMeasuring2023) but are necessary to move equity analysis into application and towards transport justice.
+
+## Call 3: Making data available is a matter of justice {#sect4.3}
+
+In the review of the literature, we were left wondering specifically - what are the motivations for the use of some destination-types and the choice to not include other destinations types? For instance, papers including leisure destinations (e.g., green space, parks, recreation) are infrequently studied and some categories are missing all together. We suspect that since methods used are predominately quantitative, the reliance on commonly used point of interest databases is also high. These databases typically include education, health and occasionally include aggregated categories for leisure and community. They are quiet on types of 'community' and 'leisure' (are they a community organization, government services, a visit to a family or friend, a care-giving destination). Further, they may be missing categories all together like childcare, typically daycare or facilities -- domestic work, mobilities of care, and mobility interdependence. These missing categories are unrepresented in the reviewed relative to the presence of work and healthcare destinations. 
+
+We can only track what we have collected and compiled; and we know that transport systems' focus is more than just to work or as a source of economic development (though in underdeveloped regions, transport systems as a force of economic development is pronounced based on the concentration of Global South transport-induce economic development studies e.g., high-speed rail [@chenImpactHighspeedRail2017; @monzonEfficiencySpatialEquity2013; @kimImpactsHighspeedRail2015]). As such, data availability matters, especially in the context of the Global South and rural geographies as fewer official data sources and public research resources exist relative to urban communities and areas in the Global North. As well as in the operationalization of emerging conceptual theories (i.e., sufficientariansm [@vanderveenOperationalizingIndicatorSufficient2020]) in equity analysis. 
+
+The calls for and relevant issues of data availability are not new, but they have at least three parts. What and who is the subject of justice? When/Where/How is it measured? And, who gets to consult and use the data? Deciding who is the subject of justice frames the data collection activity; if it's the mobility of those that do domestic work, the classification of who does this work and how it changes over time/space is fundamental. How we classify has implications for our understanding of just who is a subject of justice, as illustrated by the history of racial classifications in the US [see @leeRacial1993]. What methods we're using, under what spatio-temporal boundaries we conduct data collection, and who has (and doesn't have) access to the collected data can all impact fulsome conceptualizations of justice. In the case of transportation, the issue of data collection/availability as a matter of justice is gaining traction as digitization of data casts a starker light on these questions [@sourbatiSmart2021; @behrendtData2023].
+
+## Call 4: Develop more direct and explicit links between standards and lived experiences {#sect4.4}
+
+Robust assessments of the implications of equity standards on the experience of the public is still lacking in the literature, but it is essential for equity analysis that translates into just practice. While the estimation of the benefits of increased mobility or accessibility, or reducing affordability burdens and transport externalities is commonplace in the literature, these estimations need to be associated with outcomes like life and neighbourhood satisfaction, subjective well-being, mental and physical health, social capital, among others.
+
+Composite measures such as a transport-land-use index proposed by @appleyardTransitCorridorLivability2017 is an example of systems-thinking approach that links findings to quality-of-life proxies; they ground their measure in the principle of _livability_ along corridors of varying levels of estimated transport-land-use integration. However, the methods used demonstrate areas of relative high and low livability could go further; they could be tied to absolute goals of integration or livability. Relatably, @higgsUrbanLiveabilityIndex2019 develops an urban livability index and demonstrates the relationship between the population's use of a certain mode in a neighbourhood and a one unit increase in the index. However, are there absolute minimums or maximums for the index or the mode-choice goals that should not be crossed? 
+
+More explicit discussion of the boundaries in the distribution of the object of justice (the "What?") alongside these creative methods are needed. These links may be used to track progress towards justice across time and space, a critical point for practitioners.
+
+## Call 5: Rigorously evaluate interventions and policies {#sect4.5}
+
+We believe there is a need to evaluate equity interventions and policies: track their before, during, and after impacts. In this review, only approximately 10% of studies assess specific transport-related policy interventions through an equity lens <!-- double check this number-->. Examples include mode-shift from driving to active school travel [@mammenSchoolTravelPlanning2014], transit fare restructures [@hickeyUsingQuantitativeMethods2010] and spatial analysis of Low Traffic neighbourhoods [@aldredEquityNewActive2021]. The assessment of interventions and tracking associated outcomes can be thought of as a key step towards transport justice. 
+
+Outcomes of interventions can be compared within and between communities, and cross community comparisons can be created that may expedite the adoption of effective policies that move towards just outcomes; the presence of these synthesis and comparative studies could support brave decision-makers in the application of research into practice.
+
+<!-- # Final remarks {#sect5} -->
+
+<!-- To move the political needle and establish a common understanding of justice, it is critical that we have the concepts, the vocabulary, and the knowledge to express our intuitions. We argue that transportation, as an essential technology that can facilitate or hinder participation in society, is a very relevant sphere for matters of justice. The analysis of fairness and equity in transportation is vitally important for planning. Transportation systems and technologies converge space-time, and by definition they _always_ leave certain populations, depending on the area and time scale, more or less burdened or benefited. The analysis and tracking of equity implications is fundamental in formulating standards that are flexible to the fluid demands of transport justice. -->
+
+<!-- In this spirit, this work makes two significant contributions. It outlines a conceptual framework with supporting definitions for structuring fairness and equity analysis that may move us closer to transport justice. Then using this framework, we critically appraises findings from 165 relevant studies from the academic literature and recommend five calls to action. -->
+
+<!-- Defining _fairness_ is complex, but complexity is no excuse to shirk from the task. We hope this work contributes to the promotion of the idea that all are deserving of "access to the opportunities they need to lead a meaningful and dignified life" [@karnerTransportationEquityTransportation2020, p. 440]. This idea should guide our justice conceptualisation. Likewise, we hope that in reviewing the literature, this work will contribute to advance the development and implementation of equity standards that help bend the arc of history towards more just transportation systems, and ultimately better societies. -->
+
+
+
+
+<!-- `r word_comment(" - A CONSIDERATION FOR THE FUTURE - What do you think - do we provide a 'framework' for practioners/researchers? We perhaps provide a theoretical framework to think through these questions that they could follow + definitions. However, in our work we use who/what/where/when/how to organise our review. As it stands, we don't demonstrate this frameing could be used to organize a study/research project - like a worked example of how 1 specific paper fits into each category. This could be solved with a sub-section that demonstrates how one paper fits into each category (I know we have a few examples in the table in the appendix but there's no room in the paper and explain it).", ".")` -->
+
+<!-- The transportation justice framework can be seen as a flexible classification exercise that is supported by a "Why" rationale. In conducting an equity analysis, the subject of justice (the "Who?") must contextualize the process, the distribution of the object of justice (the "What?") must be measured, be it transport-related benefits, burdens or both, "How?" these inequities are measured and benchmarked must be described, and these questions must be contextualized by the "Where?" across temporally changing "When?"s. The explicit acknowledge and answers to these questions clarify the boundaries of the equity analysis. In this way, the rationale for "Why?" the equity analysis is important and what root cause of/for (in)justice is motivating the analysis in the first place may be critical to ultimately mobilizing equity analyses into experienced transport justice. -->
+
+<!-- From this framework and the critical appraisal of the literature, we outline five call to actions for researchers and decision-makers that should be adopted to move equity analysis closer to transport justice. These include: -->
+
+<!-- - Explicitly explain "Why?", the rationale for justice, along with supporting "Where", "When", "Who", "What, and "How" framings for equity analysis. This means specific conceptualizations and grounded standards. -->
+<!-- - Creative methods of equity appraisal that can be paired with systems thinking; current methods are not used to support this processes. -->
+<!-- - Data availability as a matter of justice: who is not being counted and who should be by whom and why?  -->
+<!-- - More explicit links between equity standards and experienced conditions and outcomes.  -->
+<!-- - Encouragement to continue work towards analysis and comparison of applied interventions, across communities and internationally.  -->
+
+**Declarations:**
+
+During the preparation of this work the authors used ChatGPT exclusively for copyediting: aiming to reduce word count, keep original style and correct typos. After using this tool, the authors reviewed and edited the content as needed and take full responsibility for the content of the publication.
+
+\newpage
+
+# References
+
+::: {#refs}
+:::
+
+# Appendix {#sec-sect6}
+
+## Why? as part of the framework to analyse questions of justice {#sec-sect61}
+
+To give an example drawing from the Canadian Charter of Rights and Freedoms, a number of rights and fundamental freedoms [including the liberty to move freely; see @chartopediaArt72023] are recognized to exist in Canada "without discrimination by reason of race, national origin, colour, religion or sex". Notice that this declaration includes several individual traits that define the subjects of justice, but does not consider age as one aspect of the person. Does this mean that they apply universally irrespective of age? Surely not, since no reasonable person would consider a toddler's demands for freedom of association as absolute. So, when do these rights fully apply in the life of a person? In 2017, Adrian Crook of Vancouver, B.C., was warned by the province's Ministry of Children and Family Development that his kids could not be out of home in the community, alone or with other kids the same age, without supervision. The Ministry's argument was that children riding the bus unsupervised compromised the parent's ability to provide care and placed them at risk [@brendHere2017]. Crook argued that the goal of teaching his kids (then aged 7, 8, 9 and 11) to ride transit to school was to raise self-reliant children [@stueckYoung2017]. While both sides discovered to everyone's surprise that no clear rules existed regarding children's independent transit use [@brendHere2017], statistically there is evidence that travel by car is riskier than travel by bus [@morencyTraveling2018]. If the public good is to reduce risk, shouldn't children be banned from riding in cars? The Canadian legal system concerns itself with fundamental freedoms and rights, one of which is the liberty to move freely. This provides an answer (of many) as to "why" we would even consider children as subjects of justice. But the devil is in the details, and answering the other questions discussed above is essential to pin the devil by the tail. Are children under the age of 10 subjects of justice (i.e., are they a "who") and who decides if they are (i.e., the courts or the parents in this case)? If so, is the ability to use transit unsupervised an object of justice that should be justly distributed (i.e., the "what") and under what circumstances (e.g, to school, to a social event; during the day, or late at night?). "When" (e.g., for all children going forward, for only 5 years) and "where" (e.g., only in the suburbs, across the country) do these questions apply? Eventually, in 2020, a court of appeals ruled in Crook's favor, allowing his children to continue to ride the bus, thus providing much needed clarity with respect to the use of transit by children who desire and are encouraged to exercise independent mobility [@stueckCourt2020]. In actuality, the courts _created_ a standard of equity: starting at a certain age, children are objects of justice from the perspective of freedom of movement, and they are due the benefits of independent mobility by transit. 
+
+Another perspective on the answer to "Why?" are cultural _norms_ that provide a rationale. In this case, the liberty of movement for all---including children---reigns supreme. But a competing concern is that the outside is dangerous, and it is so in part due to vehicular traffic [@morencyTraveling2018], and in part because of potential violence from others. Parents may have over-pronounced 'stranger danger' based on neighbourhood and socio-economic characteristics of neighbourhoods [@francisLlBeDriving2017] and children themselves may fear potential violence based on real threats of victimization [@painParanoidParentingRematerializing2006]. Whose voice, what perception of fear, and actions we take to intervene define and reproduce cultural norms, all play into the rationale behind the question "Why?". 
+
+## Evidence search strategy {#sect5-2}
+
+```{r PRISMA-figA1}
+#| label: fig-figA1
+#| fig-cap: "PRISMA flow diagram for the evidence selection process. ES signifies equity standard and EC signifies equity conceptualization."
+knitr::include_graphics("figures/Pflow_chart.png")
+```
+
+The evidence selection process is also represented using the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) flow diagram [@pagePRISMA2020Statement2021] in @fig-figA1. Notably, two rounds of exclusion occurred during the assessment for full-text eligibility. 1710 studies entered step 2, 1223 were excluded and the remaining 487 papers entered step 3. The data extraction template used by the reviewers (authorship team) in step 3 revealed that, as expected, inclusion was initially too generous, and some papers were not sufficiently relevant, because of a lack of content on standards and/or conceptual/theoretical elements. In this fashion, 322 papers were further excluded and data extraction was completed to give a final corpus of 165 papers. A summary of the reasons for exclusion of the 1545 papers (between steps 2 and 3) are included in @fig-figA1.
+
+```{r Search-query-A2}
+#| label: fig-figA2
+#| fig-cap: "The search query. TS = topic search (keywords, abstract, title). TASCA = subject categories. Green text area transportation system related terms, blue text are equity dimension related terms, purple text are equity/justice conceptualization related terms, and orange text are standards related terms. Hits corresponds the number of papers that the search yielded and was retained into the evidence selection process."
+knitr::include_graphics("figures/Search-query.png")
+```
+
+Definitions of the population-concept context (PCC) used in the creation of the inclusion and exclusion criteria for the search strategy.
+
+-   **Population**: the focus of the included studies should be on individuals, groups, communities, or entire regional areas that are impacted by passenger transportation infrastructure and systems (i.e., all modes and flows) from the perspective of equity (i.e., fair distribution, production, and re-production of burdens and benefits). This criteria is reflected in the creation of the first set of topic search terms that relate to transportation modes (e.g., "walking" OR "cycling" OR "transit" - see green text in @fig-figA2 for the full list).
+-   **Concept**: the included studies should also include equity dimensions and conceptualizes equity as discussed in the previous section. This inclusion criteria is reflected in the second and third set of topic search terms developed in the search strategy. These terms relate to types of equity dimensions (e.g., "accessibility" OR "mobility" or "transport-related air pollution" - see blue text in the @fig-figA2 for the full list) and equity conceptualizations (e.g., "Justice" OR "equity" - see purple text in @fig-figA2 for the full list).
+-   **Context**: the included studies should also be limited to publications that include equity standards. Context can be more difficult to explicitly search for with key terms so synonyms for 'standards' were added to the query as a four set of topic search terms (e.g., threshold, indicator, criteria - see orange text in @fig-figA1 for full list). Additionally, journal article and conference papers, English-language literature from any country, any study design (e.g., quantitative, qualitative, or mixed-method studies, or conceptual frameworks), and any record published within the past 30 years are included (January 1992 to March 2022). The time period is selected as the first (to the authors knowledge) peer-reviewed article which operationalized equity standards and equity conceptualization was published in 1996 [@khistyOperationalizingConceptsEquity1996]; we are broadening the search by a few years for completeness. English is selected as it is the common language spoken across the authorship team. Furthermore, papers that explicitly fall within the Transportation or related topic/category is included in the query (e.g., "Transportation", "Social Sciences", "Geography", "Civil Engineering", "Philosophy" - see the @fig-figA2 for full query).
+
+The **exclusion criteria** for the search are papers that are not within the inclusion criteria.
+Specifically:
+
+-   Literature published before January 1992.
+-   Papers which do not include transportation equity dimensions.
+-   Grey literature, as concepts contained within are frequently published in a more developed form in journals.
+
+## Evidence selection and data extraction {#sect5-3}
+
+```{r methods_framework-fig1}
+#| label: fig-figA3
+#| fig-cap: "Evidence selection workflow. Step 1 (orange) is title and abstract screening, step 2 (green) is full-text review, and step 3 (purple) is data extraction."
+knitr::include_graphics("figures/Methods_framework.png")
+```
+
+The following steps summarize the evidence selection process:
+
+1. The first step (orange box in @fig-figA3) included screening all titles and abstracts of papers on whether they included transportation equity as defined by the PCC. Each paper was screened by two independent reviewers who then voted for inclusion, exclusion, or uncertain inclusion. All uncertain papers, conflicting papers, and papers missing abstracts were reviewed by a third person for inclusion or exclusion.
+
+2. The second step (green box in @fig-figA3) included scanning all full-text papers which passed step 1. These papers were reviewed to determine if they included a relevant "how", i.e., an standard and/or relevant theoretical or conceptual discussion. At this stage, papers were evaluated again by two independent reviewers who voted for inclusion or exclusion. If an article was voted to be excluded, it was tagged with one of five possible reasons for exclusion, namely (1) no standards included; (2) no relevant conceptual elements included; (3) no standard and no conceptual elements included; (4) send back -- QA issue; or (5) other. Discrepancies were resolved by a third reviewer.
+
+3. In the last step, a data extraction template for each record was filled by one reviewer (purple box in @fig-figA3). The data extraction template was created with the aim of striking a balance between the complexity of categories and the simplicity of summary; information related to "Where?" (the geographical context and sphere of life), "When?" (temporal circumstances for the application of justice), "Who?" (the subject of justice), "What?" (the object of justice), and "How?" (equity standard(s) and concepts) was filled out for each study. @fig-figA4 contains the template that was input into *Covidence* and used throughout.
+
+Data extraction for each document that passed through all three steps was then extracted using this template:
+```{r data-extraction-template-A4}
+#| label: fig-figA4
+#| fig-cap: "The data extraction template with associated defintions."
+knitr::include_graphics("figures/Data-extract-template.png")
+```
+
+To provide further example of data extraction, a table of the resulting literature looked like:
+```{r}
+dat <- data.frame(matrix(c("What?: **mobility and accessibilty**",
+                           "Where? [@rivasHowAffordableTransportation2018] - South America (select cities)",
+                           "Analyses how affordable urban public transportation is in select Latin American and Caribbean countries. They look at the estimated average monthly cost of transit trips and average monthly household income and conceptualize **transportation-related** **affordability**, especially for the most economically vulnerable (**vertical equity**).",
+                           "How?: The financial burden of a basket of urban public transportation trips (60 trip fares, representing 30 round-trips per month) should not exceed 10% of household monthly income.",
+                           "What?: **mobility and accessibilty**",
+                           "Where?: [@bharathyRevisitingClearFloor2018] - North America (USA - National)",
+                           "This study designed a web-based tool and took a representative sample of wheeled mobility device (WhMD) users anthropometry measurements to determine if the minimum standard suggested by the ADA is sufficient. We understand this conceptualization as a type of **Rights** conceptualization that WhMD should have minimum clear floor space (as described the guidelines in line with the American Disabilities Act) to access bus shelters, bus stop pads, and transit terminals.",
+                           "How?: The clear floor area for wheelchairs: 760 mm (30 in.) wide by 1220 mm (48 in.) in length as described by the ADA standards. Of note, this minimum clear floor area is insufficient for a variety of the WhMD users.",
+                           "What?: **mobility and accessibilty**",
+                           "[@ryanWhatAreWe2021] - Europe (Stockholm, Gothenburg and Malmo cities in Sweden)",
+                           "Investigates what the literature and planning process is missing when we measure accessibility by comparing objective and self-reported accounts of accessibility among older people. This paper conceptualizes accessibility as from the position of the **capabilities approach** and **vertical equity** (particularly acknowledging that older people have capabilities that differ from the general population).",
+                           "How?: Specifically for older populations (aged 65+), the following travel distances are suggested as equitable trip lengths to grocery stores per mode: Walking: less than or equal to 1500m, Combined public transit and walking (less than or equal to 1000m (walking element)), Combined car and walking: less than or equal to 1000m less than or equal to 1000m (walking element)), Bicycle: less than or equal to 3000m in addition to travel time threshold of less than 15 mins.",
+                           "What?: **mobility and accessibilty**",
+                           "Where?: [@wismadiSpatialPreferenceModelling2014] - Asia (Yogyakarta, Indonesia)",
+                           "Explores the equitable provision of transport infrastructure provision: an application of Sen's **capability approach**. Conceptualizes equity through Sen's capability approach and spatial equity.",
+                           "How?: Areas below the relative poverty line (of its neighbours) can only be located transport resources (i.e., measure in person*kms that can be travelled at car speed, i.e., mobility) based on the following 2 benchmarks (they can be considered, together as the floor/minmum access): 1) Global: standard deviation (SD) distance to mean should be minimized. 2) Local: priority to minimise the differences with its neighbourhood",
+                           "What?: **mobility and accessibilty**",
+                           "Where?: [@zhengAreabasedEquitablePricing2020] - North America",
+                           "This paper conceptualizies equity in the multimodal network (transit, car) being fair toll-pricing across differences in populatins value of time (VOT). VOT is determined based on household income, with lower income households having lower VOT and thus deserving of lower tolls (vertical equity). From this perspective, a utilitarian perspective that seeks to minimize multimodal traffic congestion through introducing toll-pricing based on VOT is implemented.",
+                           "How?: suggest that a toll-pricing scheme based on individuals travel value-of-time (lower income people have a lower VOT) is equitable.",
+                           
+                           "What?: **environmental pollution**",
+                           "Where?: [@carrierApplicationThreeMethods2014] - North America (Montreal, Canada) ",
+                           "This work examines the statistical association between different social groups and the concentration of air pollutants. They frame their work from the perspective of environmental equity. We interpret the conceptualizations to be along the lines of **inequitable externalities**, **spatial** and **vertical equity** - transport-related air pollution is a product of road transport and it impacts the air of residents in unequal spatial ways. The paper then frames this impact as unfair, particularly from the perspective of disproportionately disadvantaged residents",
+                           "How?: The literature suggests that the health implications from the transport-related air pollution from major roadways is most acute at residential distance locations of 200 m or less. Residential locations should not be located within this distance threshold from the perspective of human health. **Environmental+** and **Population standards**: Uses the WHO NO² threshold as a point of comparison (annual concentrations of NO² should not exceed 40 μg/m-3). They argue that even through no neighbourhood, even those disproportionately low income, exceed the WHO limit in this case study, they still suggest that air pollution should not be disproportionately impacting disadvantaged neighbourhoods. It can be interpreted that they use the WHO threshold as a minimum threshold and suggest that air pollution levels should not be impacting disadvantaged populations disproportionately ( a relative population standard)",
+                           "What?: **environmental pollution**",
+                           "Where?: [@jephcoteGeospatialAnalysisNaturally2013] - Europe (Leicester, UK)",
+                           "Geospatial analysis of naturally occurring boundaries in road-transport emissions and childrens respiratory health across a demographically diverse cityscape. Emperically identifies at what distance away from major roadways children are most impacted by transport-related pollution. This is framed in the perspective of children’s **well-being**. Children are at most risk for acute respiratory distress from elevated levels of air pollution, and as such planning should consider this point of public health.",
+                           "How?: Finds that children (most vulnerable to air pollution - related to motoized traffic) are most impacted by air pollution within 283 m of a road way. This should be the distance threshold that schools and other childrens facilities are located.",
+                           "What?: **health impacts**",
+                           "Where? [@adlakhaMindGapGender2020] - Asia (Chennai, India)",
+                           "From the perspective of disparity in gendered physical activity, this paper focuses on women's cycling as both transport and exercise. They advocate for all people achieving physical activity thresholds (**horizontal equity**) but prioritize women and especially women in neighbourhoods with low-walkability and socio-economic status (**vertical equity**).",
+                           "How?: All people should get 150 min of moderate activity a week or 75 min of vigorous physical activity per week.",
+                           "What?: **health impacts**",
+                           "Where? [@savingmothersDidSavingMothers2019] - Africa (Select urban and rural regions in Uganda)",
+                           "The **well-being** of mothers, this paper examines the timely access to emergency obsteric and newborn care for child-bearing aged women in Uganda.",
+                           "How?: 2 hours to the nearest facility with surgical capacity with anesthesia services - this threshold is determined through the onset of bleeding to death if a women with obstetric hemorrhage does not receive adequate treatment).",
+                           "What?: **health impacts**",
+                           "Where?: [@iungmanImpactUrbanTransport2021] - Europe (Madrid and Barcelona, Spain)",
+                           "They use environmental pollution guidelines, but from the position of health. They investigate the impact of urban and transport planning on attributable mortality burden in Madrid and Barcelona and its distribution by socioeconomic status . Pre-mature mortality is linked to the exposure to pollution and motorized vehicles (**inequitable externalities**). These externalities should not be impacting people disproportionately (**vertical equity**) and should be even across space (**spatial equity**).",
+                           "How?: All minimum thresholds, if exceeded this is inequitable: NO² concentration 40 μg/m³; PM 2.5 concentration 10 μg/m³; Noise 53dB for average 24 hours; Living with 300 m crow-flies distance from at least .5 hectares of greenspace; and a Change of air temperature of at least 1 ⁰C. ",
+                           "What?: **health impacts**",
+                           "Where?: [@mehdizadehWalkingTimeSchool2017] - Asia (Rasht, Iran)",
+                           "From the perspective of children’s **well-being**, assesses the walking time to school. They frame walking to school as health-related.",
+                           "How?: perceived walking time to school for students aged 7-9 yrs is 10 mins, and the longer the PWTS the less likely they were to use an active mode to travel to school.",
+                           "What?: **health impacts**",
+                           "Where? [@murphySupermarketAccessTransport2017] - Oceania (Melbourne, Australia)",
+                           "Assesses the relationship between supermarket access and transport mode used, the body mass index (BMI) of the mode-user (**wellbeing**) and the equity in access distribution by income (**vertical equity**).",
+                           "How?: all households should be sufficiently active (greater than 150 min and at least 5 sessions) and households should be within 1 km euclidean distance to supermarket (80-90% of the dwellings should meet this). Planners should prioritize socially disadvantaged areas to meeting these standards first.",
+                           
+                           "What?: **transport-related safety**",
+                           "Where?: [@ferenchakEquityAnalysisProactively2019] - North America (Denver, USA)",
+                           "Operationalizes and compares an equity analysis of proactively- and reactively-identified traffic safety issues from the perspective of **Spatial equity**, **Vertical equity** and **Inequitable exposure to externalities**.",
+                           "How?: standards are suggested for both reactive and proactive analysis. First, the lower the number of collisions on the road with pedestrians/cyclists (i.e., reactive safety analysis), the better. No/minimal inequalities for general population vs. equity seeking groups (high proportion of POC and/or low income in tract). Second, the lower the perceived safety, the better (i.e., if travel to school by ped. or bike is unsafe due to traffic conditions). No/minimal inequalities for general population vs. equity seeking groups (high proportion of POC and/or low income in tract).",
+                           "What?: **transport-related safety**",
+                           "Where?: [@zheEvaluationSharedUse2008] - Asia (Tokyo, Takamatsu, and Tokushima)",
+                           "Evaluates the observed safety of  shared use pedestrian and bicycle paths from the perspective of **well-being**.",
+                           "How?: the study suggests that the safety threshold for bicycles and pedestrians to coexist on shared infrastructure is less than 0.5 pedestrians/minute per metre of sidewalk (width) and less than 3.0 cyclists/minute per metre of sidewalk (width). The standard for pedestrian/bicycle share use in terms of hourly traffic volume is less than 26 pedestrians / hour and 108 cyclists / hour for 2m wide sidewalks.",
+                           
+                           "What?: **mobility/accessibility and health impacts**",
+                           "Where?: [@aldertonWhatMeaningUrban2019] - Asia (Bangkok, Thailand) – **Mobility/ accessibility** and **health**",
+                           "Establishes short-, medium-, and long-term goals for the city in collaboration with technical leaders within the municipal government for the perspective of **well-being** (urban livability): the standards included in this table relate directly to transportation systems. Indicators are inspired by the Sustainable Development Goals (SDGs) as well other global planning standards.",
+                           "How?: 1) Green space: % of residents living < 400 m from public open space, a large park (> 1.5ha), and/or local park, 2) Public transit access: % of residents living < 400 m of a local bus stop and <800 m of train station, 3) Facilities: % of residents living < 400 m of a community centre. The following **Infrastructure standard** is suggested: Canal water quality - dissolved oxygen content of equal to or less than 2.0 mL/L",
+                           "What?: **Mobility/ accessibility** and **health impacts**",
+                           "Where?: [@berheAdaptationDissonanceQuality2014] - Africa (Mekelle, Ethiopia)",
+                         "Examines adaption and dissonance in the quality of life (QoL) of residents. QoL is conceptualized along the lines of **well-being** and aspects of QoL directly tie into transport systems. They conduct a qualitative QoL survey of residents on the topic of three QoL domains: housing quality, access to important destinations, and affordability. They also measure quantitative indicators associated with these domains. We assume the equity goal for this paper is that subjective and objective QoL measures should not be mismatched: as discussed by the authors of this study, subjective QoL is higher than objective QoL the participant is experiencing adaption and in the reverse scenario the participant is experience dissonance.",
+                           "How: 1 & 2) Access to primary or secondary education facility, percentage of households living within 1 km or 2km (walking distance), respectively from a primary school or secondary school. 3) Access to health facility, percentage of households within 40 min walking time from a health facility. 4) Access to public transport, percentage of households within a distance of 500 m from a mini-bus stop. **Population standards**: 1) Adequate family income, percentage of households earning more than the official poverty line. 2) Subjective QoL is constructed based on the households level of satisfaction for each of the eight indicators using a six point Likert-scale (1=very satisfied to 6=very dissatisfied).",
+                           "What?: **mobility/accessibility, health impacts, and safety**",
+                           "Where? [@agostfelipInclusiveModelAssessing2021] - Europe (Castellon, Spain)",
+                           "Conceptualizes equity through age-friendly urban spaces that reduce (and eliminate) conditions for **transportation-related social exclusion** for older populations and prioritize those who are economically vulnerable (**vertical equity**). These guidelines are inspired by the SDGs in addition to planning guidelines used national, regional, and local guidelines used in Spain.",
+                           "How: 1) Access to facilities needed for old age health. Minimum distance thresholds from the geometric center of neighbourhood are suggested: at least: 1000 m from health facilities (600 m or less is preferred), elderly-specific care facilities and shops should be 600 m (300 m or less is preferred). **Population standards**: 1) Certain neighbourhoods should be prioritized above others. From this papers focus on age-friendly urban environment, they suggest that if the neighbourhood has an average old age indicator (i.e., greater than 64 years, and/or greater than 79 years, and/or aging ratio of persons aged greater than 64 relative to 15 to 64 age) should be prioritized. 2) Economic vulnerable and non-civically engaged neighbourhoods should also be prioritized. If the neighbourhood has a lower percentage of civic associations within the neighbourhood than average, and/or household income, and/or a higher than average interventions for dependency and/or social subsidies, they should be priorized. **Infrastructure standards **: 1) Green space: should be at least 10 m2 per inhabitant in the neighbourhood, greater than 15 m2 per inhab. is the goal. 2) As related to sidewalk infrastructure at least 50% of all sidewalks (preferably 75% or greater) should: have a width of 1.5m or larger, ramps should have a grade of 8% or less, be well maintained (free from deficiencies), be paved for pedestrian use, and cover public transit stops. 3) Lighting is critical for traffic-safety and a sense of safety overall. As such, at least 50% roads should: have a min. of 35 lux (road traffic) and 20 lux (pedestrian streets), and adapted traffic lights. 4) Buildings should be age-friendly. As a proxy for the quality of residential living space quality, at least 50% of residential buildings in a neighbourhood should be built within the last 50 years (preferably 75% or more). In terms of physical access into the buildings, at least 10% should have elevators and accessible entrances (preferably 25% or more). **Environment + standards **: 1) Noise at the street level should be less than 55 dB and 45 dB (but preferably less than 50 dB and 40 dB) in the daytime and nighttime, respectively.",
+                           "What?: **mobility/accessibility and safety**",
+                           "Where?: [@mateobabianoPedestrianNeedsMatter2016] - Asian (Manila, Philippine)",
+                           "The perception of pedestrians’ walking environments should be sufficient across 6 themes. Equity is conceptualized around **spatial equity** (equally fair walking environments for all locations) and **rights** (the right to mobility/accessibility for pedestrians)",
+                           "How?: perceived pedestrian perception on protection, ease, equitable access, mobility, identity, and enjoyment must be met."
+                           ), ncol = 4, byrow = T))
+```
+
+```{r}
+set_flextable_defaults(font.size= 7,
+                       font.family = NULL,
+                       text.align = 'justify')
+
+flextable(dat) |>
+  ftExtra::colformat_md() |>
+  compose(
+    i = 1, j = c(1,2,3,4), part = "header", value = as_paragraph(c("Dimension", "Continent", "Conceptualization", "Standard"))) |>
+  merge_v(j=1) |> #merge 'dimensions' column
+  rotate(part = "body", rotation = "btlr", j=1, i=c(1:5,6:7,8:12, 13:14,15:18)) |>
+  valign(valign="center", part="body", j=1) |>
+  hline( i = c(5,7,12,14), part = "body") |>
+  set_table_properties(layout = "autofit")
+  
+```
+
+
+

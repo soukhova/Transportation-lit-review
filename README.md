@@ -1112,16 +1112,13 @@ of literature. Covidence is designed for collaborative work, and helps
 to document the work of multiple reviewers. The steps of this process
 are shown in (**fig-fig1?**).
 
-<div class="figure">
-
-<img src="just-transportation/figures/Methods_framework.png" alt="Evidence selection process framework. Step 1 (orange) is title and abstract screening, step 2 (green) is full-text review, and step 3 (purple) is data extraction." width="1246" />
-<p class="caption">
-Evidence selection process framework. Step 1 (orange) is title and
-abstract screening, step 2 (green) is full-text review, and step 3
-(purple) is data extraction.
-</p>
-
-</div>
+<figure>
+<img src="just-transportation/figures/Methods_framework.png"
+alt="Evidence selection process framework. Step 1 (orange) is title and abstract screening, step 2 (green) is full-text review, and step 3 (purple) is data extraction." />
+<figcaption aria-hidden="true">Evidence selection process framework.
+Step 1 (orange) is title and abstract screening, step 2 (green) is
+full-text review, and step 3 (purple) is data extraction.</figcaption>
+</figure>
 
 The following steps summarize the process:
 
@@ -1156,15 +1153,13 @@ The following steps summarize the process:
     out for each study. (**fig-A2?**) contains the template that was
     input into *Covidence* and used throughout.
 
-<div class="figure">
-
-<img src="just-transportation/figures/Pflow_chart.png" alt="PRISMA flow diagram for the evidence selection process. ES signifies equity standard and EC signifies equity conceptualization." width="720" />
-<p class="caption">
-PRISMA flow diagram for the evidence selection process. ES signifies
-equity standard and EC signifies equity conceptualization.
-</p>
-
-</div>
+<figure>
+<img src="just-transportation/figures/Pflow_chart.png"
+alt="PRISMA flow diagram for the evidence selection process. ES signifies equity standard and EC signifies equity conceptualization." />
+<figcaption aria-hidden="true">PRISMA flow diagram for the evidence
+selection process. ES signifies equity standard and EC signifies equity
+conceptualization.</figcaption>
+</figure>
 
 The evidence selection process is also represented using the Preferred
 Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) flow
@@ -1591,19 +1586,10 @@ terms of the philosophical foundations and the standards of fairness.
 
 ## “How”: concepts of justice and standards of fairness
 
-<div class="figure">
-
-<img src="just-transportation/figures/standards_conc_percentages_plot_and_table.png" alt="The proportion of equity standards (vertical axis) within each type of equity conceptualization (horizontal axis) category." width="1649" />
-<p class="caption">
-The proportion of equity standards (vertical axis) within each type of
-equity conceptualization (horizontal axis) category.
-</p>
-
-</div>
-
-<!---->
-
-We begin this section with our reflections about the way equity
+![The proportion of equity standards (vertical axis) within each type of
+equity conceptualization (horizontal axis)
+category.](just-transportation/figures/standards_conc_percentages_plot_and_table.png)
+<!----> We begin this section with our reflections about the way equity
 standards connect with conceptual and theoretical frameworks of justice.
 Broadly speaking, some trends emerge in terms of the methods used
 depending on the way equity is conceptualized and the type of standard

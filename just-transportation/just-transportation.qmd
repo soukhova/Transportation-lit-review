@@ -1,48 +1,48 @@
 ---
 title: "Searching for standards of fairness in the transportation justice literature"
 subtitle: "Searching for standards of fairness"
-format:
-  mj-report-pdf: 
-    keep-tex: true
-doctype: "Report (Draft)"
+# format:
+#   mj-report-pdf: 
+#     keep-tex: true
+# doctype: "Report (Draft)"
 
 # Author information. You can add or delete authors here
-author:
-  - name:
-      given: Anastasia
-      family: Soukhov
-    affiliations: 
-      - name: McMaster University
-        department: School of Earth, Environment and Society
-    email: soukhoa@mcmaster.ca
-  - name:
-      given: Ignacio
-      family: Tiznado-Aitken
-    affiliations: 
-      - name: University of Toronto
-        department: Department of Geography and Planning
-    email: i.tiznadoaitken@utoronto.ca  
-  - name:
-      given: Matthew
-      family: Palm
-    affiliations: 
-      - name: The University of North Carolina at Chapel Hill
-        department: Department of City and Regional Planning
-    email: palmmatt@unc.edu  
-  - name:
-      given: Steven
-      family: Farber
-    affiliations: 
-      - name: University of Toronto
-        department: Department of Geography and Planning
-    email: steven.farber@utoronto.ca  
-  - name:
-      given: Antonio
-      family: Páez
-    affiliations: 
-      - name: McMaster University
-        department: School of Earth, Environment and Society
-    email: paezha@mcmaster.ca
+# author:
+#   - name:
+#       given: Anastasia
+#       family: Soukhov
+#     affiliations: 
+#       - name: McMaster University
+#         department: School of Earth, Environment and Society
+#     email: soukhoa@mcmaster.ca
+#   - name:
+#       given: Ignacio
+#       family: Tiznado-Aitken
+#     affiliations: 
+#       - name: University of Toronto
+#         department: Department of Geography and Planning
+#     email: i.tiznadoaitken@utoronto.ca  
+#   - name:
+#       given: Matthew
+#       family: Palm
+#     affiliations: 
+#       - name: The University of North Carolina at Chapel Hill
+#         department: Department of City and Regional Planning
+#     email: palmmatt@unc.edu  
+#   - name:
+#       given: Steven
+#       family: Farber
+#     affiliations: 
+#       - name: University of Toronto
+#         department: Department of Geography and Planning
+#     email: steven.farber@utoronto.ca  
+#   - name:
+#       given: Antonio
+#       family: Páez
+#     affiliations: 
+#       - name: McMaster University
+#         department: School of Earth, Environment and Society
+#     email: paezha@mcmaster.ca
 
 # Date: default is last modified but could be a string.  
 date: last-modified
@@ -65,6 +65,8 @@ citation:
   url: https://example.com/summarizing-output
   number: "MJ-0001"
 bibliography: bibliography.bib
+
+format: docx
 ---
 
 ```{r, include=FALSE, message=FALSE, warning=FALSE, echo=FALSE}

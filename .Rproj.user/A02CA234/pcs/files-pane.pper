@@ -1,13 +1,13 @@
 {
     "sortOrder": [
         {
-            "columnIndex": 4,
-            "ascending": false
-        },
-        {
             "columnIndex": 2,
             "ascending": true
+        },
+        {
+            "columnIndex": 4,
+            "ascending": false
         }
     ],
-    "path": "C:/Users/user/OneDrive - McMaster University/05. PhD Research/02_Transport Equity Lit Review/R"
+    "path": "C:/Users/user/OneDrive - McMaster University/05. PhD Research/02_Transport Equity Lit Review/R/Journal-manuscript"
 }

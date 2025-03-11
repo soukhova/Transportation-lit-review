@@ -1,78 +1,77 @@
 ---
 title: Searching for standards of fairness in the transportation literature
 author:
-  - name: AAA #Anastasia Soukhov
+  - name: Anastasia Soukhov
     #orcid: 0000-0003-4371-4831
-    # email: soukhoa@example.com
-    # affiliations: 
-    #     - ref: MAC
-    #       name: McMaster University
-    #       department: School of Earth, Environment and Society
-    #       address: 1280 Main Street West
-    #       city: Hamilton, ON
-    #       country: Canada
-    #       postal-code: L8S 4L8
-    # attributes:
-    #     corresponding: true
-  - name: BBB #Ignacio Tiznado-Aitken
-    # orcid: 0000-0002-7385-2357
-    # email: i.tiznadoaitken@utoronto.ca
-    # affiliations:
-    #     - ref: TORONTO
-    #       name: University of Toronto Scarborough
-    #       department: Department of Geography and Planning
-    #       city: Toronto, ON
-    #       country: Canada
-    #       postal-code: M1C 1A4
-  # - name: Matthew Palm
-  #   # orcid: 0000-0002-8800-2777
-  #   email: palmmatt@unc.edu
-  #   affiliations:
-  #       - ref: UNC
-  #         name: The University of North Carolina at Chapel Hill
-  #         department: Department of City and Regional Planning
-  #         city: Chapel Hill, NC
-  #         country: USA
-  #         postal-code: 27599
-  # - name: Steven Farber
-  #   #orcid: 0000-0002-3870-5984
-  #   email: steven.farber@utoronto.ca
-  #   affiliations:
-  #       - ref: TORONTO
-  #         name: University of Toronto Scarborough
-  #         department: Department of Geography and Planning
-  #         city: Toronto, ON
-  #         country: Canada
-  #         postal-code: M1C 1A4
-  # - name: Antonio Páez
-  #   #orcid: 0000-0001-6912-9919
-  #   email: paezha@mcmaster.ca
-  #   affiliations: 
-  #       - ref: MAC
-  #         name: McMaster University
-  #         department: School of Earth, Environment and Society
-  #         address: 1280 Main Street West
-  #         city: Hamilton, ON
-  #         country: Canada
-  #         postal-code: L8S 4L8
+    email: soukhoa@example.com
+    affiliations:
+        - ref: MAC
+          name: McMaster University
+          department: School of Earth, Environment and Society
+          address: 1280 Main Street West
+          city: Hamilton, ON
+          country: Canada
+          postal-code: L8S 4L8
+    attributes:
+        corresponding: true
+  - name: Ignacio Tiznado-Aitken
+  #orcid: 0000-0002-7385-2357
+    email: i.tiznadoaitken@utoronto.ca
+    affiliations:
+      - ref: TORONTO
+        name: University of Toronto Scarborough
+        department: Department of Geography and Planning
+        city: Toronto, ON
+        country: Canada
+        postal-code: M1C 1A4
+  - name: Matthew Palm
+    #orcid: 0000-0002-8800-2777
+    email: palmmatt@unc.edu
+    affiliations:
+        - ref: UNC
+          name: The University of North Carolina at Chapel Hill
+          department: Department of City and Regional Planning
+          city: Chapel Hill, NC
+          country: USA
+          postal-code: 27599
+  - name: Steven Farber
+    #orcid: 0000-0002-3870-5984
+    email: steven.farber@utoronto.ca
+    affiliations:
+        - ref: TORONTO
+          name: University of Toronto Scarborough
+          department: Department of Geography and Planning
+          city: Toronto, ON
+          country: Canada
+          postal-code: M1C 1A4
+  - name: Antonio Páez
+    #orcid: 0000-0001-6912-9919
+    email: paezha@mcmaster.ca
+    affiliations:
+        - ref: MAC
+          name: McMaster University
+          department: School of Earth, Environment and Society
+          address: 1280 Main Street West
+          city: Hamilton, ON
+          country: Canada
+          postal-code: L8S 4L8
 abstract: |
   This work provides a synthesis of how transportation fairness, justice and equity literature has operationalized standards. We first outline a flexible framework for engaging fairness questions and then apply it to collate the literature review's results. We find most articles were published within the last half decade and center urban areas, with 40% exploring Global South case studies. Income groups, followed by specific age groups (i.e., older adults) and people with disabilities, are most commonly the subjects of justice. Transit and pedestrian modes are the most frequently studied mobility tools; with many analyses being multimodal and comparative in nature. The benefits and burdens, the "What" of mobility, focuses on movement (i.e., quality of trips taken) or the potential for movement (i.e., accessibility). How the reviewed works conceptualize fairness is varied (e.g., Vertical Equity, Wellbeing, Rights-Based); but is often delineated with a supporting opportunity standard (37%) (i.e., number of parks within a 30-minute travel time) or population standard (36%) (i.e., bottom income quartile), though Infrastructure (i.e., level of service) and Environmental+ (i.e., air pollution) standards are also prominent. While the reviewed literature is extensive, we conclude with calls to action for researchers, practitioners, and transportation advocates to drive meaningful change. These include developing standards based on rigorous conceptualizations, advancing systems-thinking approaches to fairness, ensuring data accessibility as a matter of justice, strengthening the connection between standards and lived experiences, and rigorously evaluating interventions and policies.
 
 keywords: [transportation; equity; justice; fairness; standards; transportation planning; literature review]
-date: last-modified
+#date: last-modified
 bibliography: bibliography.bib
-format:
-  elsevier-pdf:
-    #keep-tex: true
-    include-in-header:
-      text: |
-        \usepackage{lineno}
-        \linenumbers
-    journal:
-      #name: Travel Behavior and Society
-      formatting: preprint
-      # model: 3p # Don't set a model with preprint
-      cite-style: authoryear
+format: docx
+  # nature-pdf: 
+  #   journal: "default"
+  #   keep-tex: true
+  #   include-in-header:
+  #     text: |
+  #       \usepackage{lineno}
+  #       \linenumbers
+  #   # journal:
+  #   #   # model: 3p # Don't set a model with preprint
+  #   #   cite-style: authoryear
 ---
 
 

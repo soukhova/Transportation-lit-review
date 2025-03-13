@@ -8,7 +8,7 @@
 
 The pdf version of this report is
 available <a
-href="https://github.com/soukhova/Transportation-lit-review/blob/main/just-transportation/just-transportation.pdf">here in this repo</a> or on the Mobilizing Justice <a
+href="https://github.com/soukhova/Transportation-lit-review/blob/main/just-transportation/just-transportation.pdf">here in this repo</a> and on the Mobilizing Justice <a
 href="https://mobilizingjustice.ca/wp-content/uploads/2024/01/just-transportation-1.pdf">website.</a>
 </figure>
 
